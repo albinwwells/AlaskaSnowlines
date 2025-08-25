@@ -32,7 +32,7 @@ st.title("Alaska Snowlines")
 #gdf = load_glacier_data(URL)
 
 # Local path to shapefile
-RGI_shapefile_path = "/Users/albinwells/data/rgi70/glaciers/RGI2000-v7.0-G-01_alaska/RGI2000-v7.0-G-01_alaska.shp"
+RGI_shapefile_path = "data/RGI2000-v7.0-G-01_alaska.shp"
 
 # Load shapefile
 gdf = gpd.read_file(RGI_shapefile_path)
