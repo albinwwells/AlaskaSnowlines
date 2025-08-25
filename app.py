@@ -13,7 +13,6 @@ st.title("Alaska Snowlines")
 # ---------------- Download and extract ZIP: glacier outlines ----------------
 ZENODO_URL = "https://zenodo.org/records/16944113/files/RGI2000-v7.0-G-01_alaska.gpkg.zip?download=1"
 
-
 def load_glaciers(url):
     # Download ZIP into memory
     response = requests.get(url)
@@ -31,6 +30,7 @@ def load_glaciers(url):
     os.remove(tmp_path) # remove tmp file
     return gdf
 
+gdf = load_glaciers(ZENODO_URL)
 center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()] # Center map
 m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron") # Create folium map
 
