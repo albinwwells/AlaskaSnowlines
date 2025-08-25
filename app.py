@@ -46,10 +46,11 @@ gdf = load_glaciers(ZENODO_URL)
 gdf = gdf[gdf["area_km2"] > 2].copy()
 
 # ---------------- Lightweight map ----------------
-outline_gdf = gdf[["geometry"]].copy()
-outline_gdf["geometry"] = outline_gdf.geometry.simplify(tolerance=100, preserve_topology=True) # simplify to help plotting
+with st.spinner("Simplifying geometries..."):
+    outline_gdf = gdf[["geometry"]].copy()
+    outline_gdf["geometry"] = outline_gdf.geometry.simplify(tolerance=10, preserve_topology=True) # simplify to help plotting
 
-with st.spinner("Loading glacier map..."):
+with st.spinner("Plotting glaciers..."):
     # ---------------- Map ----------------
     bounds = outline_gdf.total_bounds
     center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
@@ -83,20 +84,6 @@ with st.spinner("Loading glacier map..."):
     # ---------------- Layers & render ----------------
     folium.LayerControl().add_to(m)
     st_folium(m, width=800, height=600)
-
-# # ---------------- Plot points from 'cenlat' and 'cenlon' ----------------
-# for _, row in gdf.iterrows():
-#     lat, lon = row.get("cenlat"), row.get("cenlon")
-#     if lat is not None and lon is not None:
-#         folium.CircleMarker(
-#             location=[lat, lon],
-#             radius=3,
-#             color="red",
-#             fill=True,
-#             fill_color="red",
-#             popup=(f"RGI ID: {row['rgi_id']}<br>Name: {row['glac_name']}<br>Lat: {row['cenlat']}<br>Lon: {row['cenlon']}"
-#                    f"<br>Area (sq. km): {row['area_km2']}<br>Min elev (m): {row['zmin_m']}<br>Max elev (m): {row['zmax_m']}")
-#         ).add_to(m)
 
 folium.LayerControl().add_to(m)
 
