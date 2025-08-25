@@ -1,6 +1,7 @@
 import streamlit as st
 import geopandas as gpd
 import folium
+from folium.features import GeoJsonPopup, GeoJsonTooltip
 from streamlit_folium import st_folium
 import requests
 import tempfile
@@ -10,7 +11,7 @@ import os
 
 st.title("Alaska Snowlines")
 
-# Download and extract ZIP
+# ---------------- Download and extract ZIP: glacier outlines ----------------
 ZENODO_URL = "https://zenodo.org/records/16943975/files/RGI2000-v7.0-G-01_alaska.gpkg.zip?download=1"
 
 @st.cache_data(show_spinner="Loading glaciers from Zenodo...")
@@ -41,9 +42,7 @@ center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()]
 # Create folium map
 m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
 
-from folium.features import GeoJsonPopup, GeoJsonTooltip
-
-# Add glacier polygons with popup
+# ---------------- Add glacier polygons with popup ----------------
 folium.GeoJson(
     gdf,
     name="Alaska Glaciers",
