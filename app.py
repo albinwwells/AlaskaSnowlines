@@ -31,14 +31,8 @@ def load_glaciers(url):
     os.remove(tmp_path) # remove tmp file
     return gdf
 
-# Center map
-gdf_proj = gdf.to_crs(epsg=3338)  # Alaska Albers
-centroid = gdf_proj.geometry.centroid.unary_union.centroid
-center = gpd.GeoSeries([centroid], crs=gdf_proj.crs).to_crs(epsg=4326)
-center_coords = [center.y.iloc[0], center.x.iloc[0]]
-
-# Create map
-m = folium.Map(location=center_coords, zoom_start=4, tiles="CartoDB positron")
+center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()] # Center map
+m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron") # Create folium map
 
 # ---------------- Add glacier polygons ----------------
 folium.GeoJson(
