@@ -4,7 +4,6 @@ import folium
 from folium.features import GeoJsonPopup, GeoJsonTooltip
 from streamlit_folium import st_folium
 import requests
-import tempfile
 import zipfile
 import io
 import os
@@ -16,22 +15,22 @@ ZENODO_URL = "https://zenodo.org/records/16943975/files/RGI2000-v7.0-G-01_alaska
 
 @st.cache_data(show_spinner="Loading glaciers from Zenodo...")
 def load_glaciers(url):
-    # Use a temporary directory for extraction
-    with tempfile.TemporaryDirectory() as tmpdir:
-        # Check if file already exists in cache dir
-        cached_path = os.path.join(tmpdir, "RGI2000-v7.0-G-01_02_alaska.gpkg")
-        if os.path.exists(cached_path):
-            gdf = gpd.read_file(cached_path)
-            return gdf
+    cache_dir = st.cache_data.get_path("glaciers")  # Streamlit-managed cache dir
+    gpkg_path = os.path.join(cache_dir, "RGI2000-v7.0-G-01_02_alaska.gpkg")
 
-        # Download and extract
-        response = requests.get(url)
-        response.raise_for_status()
-        with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-            zf.extractall(tmpdir)
-            gpkg_path = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
-            gdf = gpd.read_file(os.path.join(tmpdir, gpkg_path))
-    return gdf
+    # If already exists, just read it
+    if os.path.exists(gpkg_path):
+        return gpd.read_file(gpkg_path)
+
+    # Otherwise download and extract once
+    response = requests.get(url)
+    response.raise_for_status()
+    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+        zf.extractall(cache_dir)
+        gpkg_file = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
+        os.rename(os.path.join(cache_dir, gpkg_file), gpkg_path)
+
+    return gpd.read_file(gpkg_path)
 
 # Load glaciers (cached)
 gdf = load_glaciers(ZENODO_URL)
@@ -51,16 +50,15 @@ folium.GeoJson(
         "weight": 0.5,
         "fillOpacity": 0.3,
     },
-    # Show selected columns in popup
     popup=GeoJsonPopup(
-        fields=["rgi_id", "glac_name", "cenlat", "cenlon", "area_km2", "zmin_m", "zmax_m"],  # choose fields
+        fields=["rgi_id", "glac_name", "cenlat", "cenlon", "area_km2", "zmin_m", "zmax_m"],
         aliases=["RGI ID:", "Name:", "Center Lat:", "Center Lon:", "Area (sq. km):", "Min elev (m):", "Max elev (m):"],
         localize=True,
         labels=True,
         style="background-color: white;",
     ),
     tooltip=GeoJsonTooltip(
-        fields=["rgi_id", "glac_name"],  # shows on hover
+        fields=["rgi_id", "glac_name"],
         aliases=["RGI ID:", "Name:"],
         sticky=True,
     ),
