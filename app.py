@@ -53,16 +53,14 @@ center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
 
 m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
 
-# Add polygons with tooltip
+# Add polygons
+outline_gdf = gdf[["geometry"]].copy()
 folium.GeoJson(
-    map_gdf,
-    style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.3},
-    tooltip=GeoJsonTooltip(
-        fields=["rgi_id", "glac_name"],
-        aliases=["RGI ID:", "Name:"],
-        sticky=True
-    )
+    outline_gdf,
+    style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
 ).add_to(m)
+
+
 
 folium.LayerControl().add_to(m)
 
