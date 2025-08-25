@@ -13,28 +13,19 @@ st.title("Alaska Snowlines")
 # ---------------- Download and extract ZIP: glacier outlines ----------------
 ZENODO_URL = "https://zenodo.org/records/16943975/files/RGI2000-v7.0-G-01_alaska.gpkg.zip?download=1"
 
-@st.cache_data(show_spinner="Loading glaciers from Zenodo...")
 def load_glaciers(url):
-    # Use a persistent folder inside /tmp or Streamlit cache
-    cache_dir = "/tmp/alaska_glaciers"
-    os.makedirs(cache_dir, exist_ok=True)
-
-    gpkg_path = os.path.join(cache_dir, "RGI2000-v7.0-G-01_02_alaska.gpkg")
-
-    if os.path.exists(gpkg_path):
-        return gpd.read_file(gpkg_path)
-
-    # Download and extract ZIP
+    # Download ZIP into memory
     response = requests.get(url)
     response.raise_for_status()
     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-        zf.extractall(cache_dir)
-        gpkg_file = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
-        os.rename(os.path.join(cache_dir, gpkg_file), gpkg_path)
+        # Find the GeoPackage file
+        gpkg_name = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
+        # Open the file directly from the ZIP in memory
+        with zf.open(gpkg_name) as gpkgfile:
+            gdf = gpd.read_file(gpkgfile)
+    return gdf
 
-    return gpd.read_file(gpkg_path)
-
-# Load glaciers (cached)
+# Load glaciers
 gdf = load_glaciers(ZENODO_URL)
 
 # Center map
