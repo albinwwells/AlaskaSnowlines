@@ -47,14 +47,14 @@ gdf = load_glaciers(ZENODO_URL)
 # ---------------- Lightweight map ----------------
 with st.spinner("Loading glacier map..."):
     # ---------------- Map ----------------
-    bounds = outline_gdf.total_bounds
+    bounds = gdf.total_bounds
     center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
 
     m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
 
-    # # ---------------- Add simplified outlines ----------------
+    # # ---------------- Add outlines ----------------
     # folium.GeoJson(
-    #     outline_gdf,
+    #     gdf,
     #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
     # ).add_to(m)
 
