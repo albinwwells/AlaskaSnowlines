@@ -48,7 +48,7 @@ gdf = gdf[gdf["area_km2"] > 2].copy()
 # ---------------- Lightweight map ----------------
 with st.spinner("Simplifying geometries..."):
     outline_gdf = gdf[["geometry"]].copy()
-    # outline_gdf["geometry"] = outline_gdf.geometry.simplify(tolerance=0.01, preserve_topology=True) # simplify to help plotting
+    outline_gdf["geometry"] = outline_gdf.geometry.simplify(tolerance=0.01, preserve_topology=True) # simplify to help plotting
 
 with st.spinner("Plotting glaciers..."):
     # ---------------- Map ----------------
