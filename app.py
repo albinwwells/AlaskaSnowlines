@@ -41,7 +41,9 @@ center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()]
 # Create folium map
 m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
 
-# Add glacier polygons
+from folium.features import GeoJsonPopup, GeoJsonTooltip
+
+# Add glacier polygons with popup
 folium.GeoJson(
     gdf,
     name="Alaska Glaciers",
@@ -50,6 +52,19 @@ folium.GeoJson(
         "weight": 0.5,
         "fillOpacity": 0.3,
     },
+    # Show selected columns in popup
+    popup=GeoJsonPopup(
+        fields=["rgi_id", "glac_name", "cenlat", "cenlon", "area_km2", "zmin_m", "zmax_m"],  # choose fields
+        aliases=["RGI ID:", "Name:", "Center Lat:", "Center Lon:", "Area (sq. km):", "Min elev (m):", "Max elev (m):"],
+        localize=True,
+        labels=True,
+        style="background-color: white;",
+    ),
+    tooltip=GeoJsonTooltip(
+        fields=["rgi_id", "glac_name"],  # shows on hover
+        aliases=["RGI ID:", "Name:"],
+        sticky=True,
+    ),
 ).add_to(m)
 
 folium.LayerControl().add_to(m)
