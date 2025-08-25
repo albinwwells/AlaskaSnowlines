@@ -10,32 +10,30 @@ import os
 
 st.title("Alaska Snowlines")
 
-## URL to zipped Alaska shapefile (RGI v7.0)
-#URL = "https://daacdata.apps.nsidc.org/pub/DATASETS/nsidc0770_rgi_v7/RGI2000-v7.0-regions.zip"
+# Download and extract ZIP
+ZENODO_URL = "https://zenodo.org/record/16943879/files/RGI2000-v7.0-G-01_02_alaska.gpkg.zip?download=1"
 
-#@st.cache_data(show_spinner="Downloading RGI Alaska shapefile...")
-#def load_glacier_data(url):
-#    # Download the ZIP
-#    response = requests.get(url)
-#    response.raise_for_status()
+@st.cache_data(show_spinner="Loading glaciers from Zenodo...")
+def load_glaciers(url):
+    # Use a temporary directory for extraction
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # Check if file already exists in cache dir
+        cached_path = os.path.join(tmpdir, "RGI2000-v7.0-G-01_02_alaska.gpkg")
+        if os.path.exists(cached_path):
+            gdf = gpd.read_file(cached_path)
+            return gdf
 
-#    with tempfile.TemporaryDirectory() as tmpdir:
-#        with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-#            zf.extractall(tmpdir)
-#            # Find .shp inside extracted files
-#            shp_path = [f for f in zf.namelist() if f.endswith(".shp")][0]
-#            full_path = os.path.join(tmpdir, shp_path)
-#            gdf = gpd.read_file(full_path)
-#    return gdf
+        # Download and extract
+        response = requests.get(url)
+        response.raise_for_status()
+        with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+            zf.extractall(tmpdir)
+            gpkg_path = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
+            gdf = gpd.read_file(os.path.join(tmpdir, gpkg_path))
+    return gdf
 
-## Load cached data
-#gdf = load_glacier_data(URL)
-
-# Local path to shapefile
-RGI_shapefile_path = "data/RGI2000-v7.0-G-01_alaska.shp"
-
-# Load shapefile
-gdf = gpd.read_file(RGI_shapefile_path)
+# Load glaciers (cached)
+gdf = load_glaciers(ZENODO_URL)
 
 # Center map
 center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()]
