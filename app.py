@@ -11,22 +11,25 @@ import os
 st.title("Alaska Snowlines")
 
 # ---------------- Download and extract ZIP: glacier outlines ----------------
-ZENODO_URL = "https://zenodo.org/records/16943975/files/RGI2000-v7.0-G-01_alaska.gpkg.zip?download=1"
+ZENODO_URL = "https://zenodo.org/records/16944113/files/RGI2000-v7.0-G-01_alaska.gpkg.zip?download=1"
+
 
 def load_glaciers(url):
     # Download ZIP into memory
     response = requests.get(url)
     response.raise_for_status()
+    
     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-        # Find the GeoPackage file
         gpkg_name = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
-        # Open the file directly from the ZIP in memory
-        with zf.open(gpkg_name) as gpkgfile:
-            gdf = gpd.read_file(gpkgfile)
-    return gdf
 
-# Load glaciers
-gdf = load_glaciers(ZENODO_URL)
+        # Write the GPKG to a temp file
+        with tempfile.NamedTemporaryFile(suffix=".gpkg", delete=False) as tmp:
+            tmp.write(zf.read(gpkg_name))
+            tmp_path = tmp.name
+
+    gdf = gpd.read_file(tmp_path) # read with GeoPandas from the temp file
+    os.remove(tmp_path) # remove tmp file
+    return gdf
 
 # Center map
 center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()]
