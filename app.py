@@ -10,25 +10,37 @@ import tempfile
 
 st.title("Alaska Snowlines")
 
+# ---------------- Import shapefiles ----------------
 ZENODO_URL = "https://zenodo.org/records/16944113/files/RGI2000-v7.0-G-01_alaska.gpkg.zip?download=1"
 
-@st.cache_data(show_spinner="Loading glaciers...")
+@st.cache_data(show_spinner="Loading glaciers from Zenodo...")
 def load_glaciers(url):
+    # Persistent cache folder
+    cache_dir = "/tmp/alaska_glaciers"
+    os.makedirs(cache_dir, exist_ok=True)
+
+    gpkg_path = os.path.join(cache_dir, "RGI2000-v7.0-G-01_alaska.gpkg")
+
+    # If already downloaded, read from cache
+    if os.path.exists(gpkg_path):
+        gdf = gpd.read_file(gpkg_path)
+        return gdf
+
     # Download ZIP
     response = requests.get(url)
     response.raise_for_status()
-    
     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
         gpkg_name = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
+        # Extract GPKG to cache
+        zf.extract(gpkg_name, cache_dir)
+        extracted_path = os.path.join(cache_dir, gpkg_name)
+        # Rename to standard path
+        os.rename(extracted_path, gpkg_path)
 
-        # Write GPKG to a temporary file
-        with tempfile.NamedTemporaryFile(suffix=".gpkg", delete=False) as tmp:
-            tmp.write(zf.read(gpkg_name))
-            tmp_path = tmp.name
-
-    gdf = gpd.read_file(tmp_path)
+    gdf = gpd.read_file(gpkg_path)
     return gdf
 
+# Load glaciers
 gdf = load_glaciers(ZENODO_URL)
 
 # ---------------- Lightweight map ----------------
