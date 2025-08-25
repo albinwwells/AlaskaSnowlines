@@ -60,7 +60,19 @@ folium.GeoJson(
     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
 ).add_to(m)
 
-
+# # ---------------- Plot points from 'cenlat' and 'cenlon' ----------------
+# for _, row in gdf.iterrows():
+#     lat, lon = row.get("cenlat"), row.get("cenlon")
+#     if lat is not None and lon is not None:
+#         folium.CircleMarker(
+#             location=[lat, lon],
+#             radius=3,
+#             color="red",
+#             fill=True,
+#             fill_color="red",
+#             popup=(f"RGI ID: {row['rgi_id']}<br>Name: {row['glac_name']}<br>Lat: {row['cenlat']}<br>Lon: {row['cenlon']}"
+#                    f"<br>Area (sq. km): {row['area_km2']}<br>Min elev (m): {row['zmin_m']}<br>Max elev (m): {row['zmax_m']}")
+#         ).add_to(m)
 
 folium.LayerControl().add_to(m)
 
