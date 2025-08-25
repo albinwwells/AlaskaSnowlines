@@ -45,6 +45,7 @@ def load_glaciers(url):
 gdf = load_glaciers(ZENODO_URL)
 
 # ---------------- Lightweight map ----------------
+gdf = gdf[gdf["area_km2"] > 2].copy() # Filter glaciers by area
 map_gdf = gdf[["rgi_id", "glac_name", "geometry"]].copy()
 
 # Center map using bounds
