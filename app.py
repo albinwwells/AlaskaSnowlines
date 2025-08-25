@@ -56,15 +56,15 @@ folium.LayerControl().add_to(m)
 # Render map and capture clicks
 map_data = st_folium(m, width=800, height=600)
 
-# ---------------- Show popup_fields dynamically on click ----------------
-popup_fields = ["rgi_id", "glac_name", "cenlat", "cenlon", "area_km2", "zmin_m", "zmax_m"]
-existing_fields = [f for f in popup_fields if f in gdf.columns]
+# # ---------------- Show popup_fields dynamically on click ----------------
+# popup_fields = ["rgi_id", "glac_name", "cenlat", "cenlon", "area_km2", "zmin_m", "zmax_m"]
+# existing_fields = [f for f in popup_fields if f in gdf.columns]
 
-if map_data and "last_active_drawing" in map_data and map_data["last_active_drawing"]:
-    feature = map_data["last_active_drawing"]
-    rgi_id = feature["properties"].get("rgi_id")
-    if rgi_id:
-        st.write("Selected glacier RGI ID:", rgi_id)
-        row = gdf[gdf["rgi_id"] == rgi_id]
-        st.write(row[existing_fields])
+# if map_data and "last_active_drawing" in map_data and map_data["last_active_drawing"]:
+#     feature = map_data["last_active_drawing"]
+#     rgi_id = feature["properties"].get("rgi_id")
+#     if rgi_id:
+#         st.write("Selected glacier RGI ID:", rgi_id)
+#         row = gdf[gdf["rgi_id"] == rgi_id]
+#         st.write(row[existing_fields])
 
