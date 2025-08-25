@@ -32,7 +32,11 @@ def load_glaciers(url):
     return gdf
 
 # Center map
-center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()]
+gdf_proj = gdf.to_crs(epsg=3338)
+center = [gdf_proj.geometry.centroid.y.mean(), gdf_proj.geometry.centroid.x.mean()]
+
+center_lonlat = gpd.GeoSeries([gdf_proj.geometry.centroid.unary_union.centroid], crs=gdf_proj.crs).to_crs(epsg=4326)
+center = [center_lonlat.y.iloc[0], center_lonlat.x.iloc[0]] # get center in lat, lon
 
 # Create folium map
 m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
