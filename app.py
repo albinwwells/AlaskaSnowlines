@@ -11,7 +11,7 @@ import os
 st.title("Alaska Snowlines")
 
 # Download and extract ZIP
-ZENODO_URL = "https://zenodo.org/record/16943879/files/RGI2000-v7.0-G-01_02_alaska.gpkg.zip?download=1"
+ZENODO_URL = "https://zenodo.org/records/16943975/files/RGI2000-v7.0-G-01_alaska.gpkg.zip?download=1"
 
 @st.cache_data(show_spinner="Loading glaciers from Zenodo...")
 def load_glaciers(url):
