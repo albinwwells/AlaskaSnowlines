@@ -45,21 +45,40 @@ def load_glaciers(url):
 gdf = load_glaciers(ZENODO_URL)
 
 # ---------------- Lightweight map ----------------
-gdf = gdf[gdf["area_km2"] > 2].copy() # Filter glaciers by area
-map_gdf = gdf[["rgi_id", "glac_name", "geometry"]].copy()
+with st.spinner("Loading glacier map..."):
+    # ---------------- Map ----------------
+    bounds = outline_gdf.total_bounds
+    center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
 
-# Center map using bounds
-bounds = map_gdf.total_bounds  # [minx, miny, maxx, maxy]
-center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
+    m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
 
-m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
+    # # ---------------- Add simplified outlines ----------------
+    # folium.GeoJson(
+    #     outline_gdf,
+    #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
+    # ).add_to(m)
 
-# Add polygons
-outline_gdf = gdf[["geometry"]].copy()
-folium.GeoJson(
-    outline_gdf,
-    style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
-).add_to(m)
+    # # ---------------- Add clickable centroids ----------------
+    # for _, row in gdf.iterrows():
+    #     lat, lon = row.get("cenlat"), row.get("cenlon")
+    #     if lat is not None and lon is not None:
+    #         popup = (
+    #             f"RGI ID: {row['rgi_id']} | Name: {row['glac_name']}<br>"
+    #             f"Lat: {lat} | Lon: {lon} | "
+    #             f"Area: {row['area_km2']} sq.km | Min: {row['zmin_m']} m | Max: {row['zmax_m']} m"
+    #         )
+    #         folium.CircleMarker(
+    #             location=[lat, lon],
+    #             radius=3,
+    #             color="red",
+    #             fill=True,
+    #             fill_color="red",
+    #             popup=popup
+    #         ).add_to(m)
+
+    # ---------------- Layers & render ----------------
+    folium.LayerControl().add_to(m)
+    st_folium(m, width=800, height=600)
 
 # # ---------------- Plot points from 'cenlat' and 'cenlon' ----------------
 # for _, row in gdf.iterrows():
