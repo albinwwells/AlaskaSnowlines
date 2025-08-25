@@ -43,6 +43,7 @@ def load_glaciers(url):
 
 # Load glaciers
 gdf = load_glaciers(ZENODO_URL)
+gdf = gdf[gdf["area_km2"] > 2].copy()
 
 # ---------------- Lightweight map ----------------
 with st.spinner("Loading glacier map..."):
