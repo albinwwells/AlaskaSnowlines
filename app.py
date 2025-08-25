@@ -52,11 +52,11 @@ with st.spinner("Loading glacier map..."):
 
     m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
 
-    # # ---------------- Add outlines ----------------
-    # folium.GeoJson(
-    #     gdf,
-    #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
-    # ).add_to(m)
+    # ---------------- Add outlines ----------------
+    folium.GeoJson(
+        gdf,
+        style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
+    ).add_to(m)
 
     # # ---------------- Add clickable centroids ----------------
     # for _, row in gdf.iterrows():
