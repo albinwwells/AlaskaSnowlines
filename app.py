@@ -15,15 +15,24 @@ ZENODO_URL = "https://zenodo.org/records/16943975/files/RGI2000-v7.0-G-01_alaska
 
 @st.cache_data(show_spinner="Loading glaciers from Zenodo...")
 def load_glaciers(url):
-    # Download and extract
+    # Use a persistent folder inside /tmp or Streamlit cache
+    cache_dir = "/tmp/alaska_glaciers"
+    os.makedirs(cache_dir, exist_ok=True)
+
+    gpkg_path = os.path.join(cache_dir, "RGI2000-v7.0-G-01_02_alaska.gpkg")
+
+    if os.path.exists(gpkg_path):
+        return gpd.read_file(gpkg_path)
+
+    # Download and extract ZIP
     response = requests.get(url)
     response.raise_for_status()
-    with tempfile.TemporaryDirectory() as tmpdir:
-        with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-            zf.extractall(tmpdir)
-            gpkg_path = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
-            gdf = gpd.read_file(os.path.join(tmpdir, gpkg_path))
-    return gdf
+    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+        zf.extractall(cache_dir)
+        gpkg_file = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
+        os.rename(os.path.join(cache_dir, gpkg_file), gpkg_path)
+
+    return gpd.read_file(gpkg_path)
 
 # Load glaciers (cached)
 gdf = load_glaciers(ZENODO_URL)
