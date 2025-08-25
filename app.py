@@ -40,30 +40,35 @@ center_coords = [center.y.iloc[0], center.x.iloc[0]]
 # Create map
 m = folium.Map(location=center_coords, zoom_start=4, tiles="CartoDB positron")
 
-# ---------------- Add glacier polygons with popup ----------------
+# ---------------- Add glacier polygons ----------------
 folium.GeoJson(
     gdf,
-    name="Alaska Glaciers",
-    style_function=lambda x: {
-        "color": "blue",
-        "weight": 0.5,
-        "fillOpacity": 0.3,
-    },
-    popup=GeoJsonPopup(
-        fields=["rgi_id", "glac_name", "cenlat", "cenlon", "area_km2", "zmin_m", "zmax_m"],
-        aliases=["RGI ID:", "Name:", "Center Lat:", "Center Lon:", "Area (sq. km):", "Min elev (m):", "Max elev (m):"],
-        localize=True,
-        labels=True,
-        style="background-color: white;",
-    ),
-    tooltip=GeoJsonTooltip(
-        fields=["rgi_id", "glac_name"],
+    style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.3},
+    tooltip=folium.GeoJsonTooltip(
+        fields=["rgi_id", "glac_name"], 
         aliases=["RGI ID:", "Name:"],
-        sticky=True,
-    ),
+        sticky=True
+    )
 ).add_to(m)
 
-folium.LayerControl().add_to(m)
+# Render map in Streamlit
+map_data = st_folium(m, width=800, height=600)
 
+# ---------------- Add pop-ups on click ----------------
+popup_fields = ["rgi_id", "glac_name", "cenlat", "cenlon", "area_km2", "zmin_m", "zmax_m"]
+existing_fields = [f for f in popup_fields if f in gdf.columns]
+
+# Check if user clicked a feature
+if map_data and "last_active_drawing" in map_data and map_data["last_active_drawing"]:
+    feature = map_data["last_active_drawing"]
+    rgi_id = feature["properties"]["rgi_id"]
+    st.write("Selected glacier RGI ID:", rgi_id)
+
+    # Show additional info only for this feature
+    row = gdf[gdf["rgi_id"] == rgi_id]
+    st.write(row[existing_fields])
+    
+# ---------------- Add layers ----------------
+folium.LayerControl().add_to(m)
 st_folium(m, width=800, height=600)
 
