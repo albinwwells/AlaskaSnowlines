@@ -73,23 +73,29 @@ st.set_page_config(layout="wide", page_title="Snowline Plot")
 @st.cache_data(show_spinner="Fetching glacier data...")
 def fetch_snowline_data(rgi_no: str):
     """Fetch snowline and melt extent CSVs from Zenodo for a given glacier number."""
-    url = "https://zenodo.org/records/16947075/files/data.zip?download=1"
-    response = requests.get(url)
+    json_url = "https://zenodo.org/records/16950695/files/rgi_data_links.json?download=1"
+    response = requests.get(json_url)
     response.raise_for_status()
+    rgi_index = response.json()  # dictionary: rgi_no -> zip URL
 
-    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-        file_name = f"{rgi_no}.zip"
-        if file_name not in zf.namelist():
-            return None, None  # glacier not available
+    if rgi_no not in rgi_index:
+        return None, None  # glacier not available
 
-        with zf.open(file_name) as glacier_zip:
-            with zipfile.ZipFile(glacier_zip) as gzf:
-                glac_csvs = gzf.namelist()
-                sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
-                me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
-                db_csvs = [f.replace("snowline_elev_percentile", "db_bin_mean") for f in sl_csvs]
-                hyps_csvs = [f.replace("snowline_elev_percentile", "hypsometry") for f in sl_csvs]
-                return sl_csvs, me_csvs, db_csvs, hyps_csvs, gzf
+    # Get the URL for the specific glacier
+    zip_name = rgi_index[rgi_no]
+    zip_url = f"https://zenodo.org/records/16950695/files/{zip_name}?download=1"
+
+    # Download the zip
+    response = requests.get(zip_url)
+    response.raise_for_status()
+    with zipfile.ZipFile(io.BytesIO(response.content)) as gzf:
+        glac_csvs = gzf.namelist()
+
+        sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
+        me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
+        db_csvs = [f.replace("snowline_elev_percentile", "db_bin_mean") for f in sl_csvs]
+        hyps_csvs = [f.replace("snowline_elev_percentile", "hypsometry") for f in sl_csvs]
+        return sl_csvs, me_csvs, db_csvs, hyps_csvs, gzf
 
 
 # ---------------- Main page ----------------
