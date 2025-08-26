@@ -4,6 +4,8 @@ import numpy as np
 import requests, zipfile, io
 import matplotlib.pyplot as plt
 
+st.session_state["current_page"] = "plot"
+
 # ---------------- plotting functions ----------------
 def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='db', 
                     ylabel='Elevation [m a.s.l.]', glac_name_dict={}, fig_fn=None, figsize=(9,6), bins2plot_lowerquantile=2, 
