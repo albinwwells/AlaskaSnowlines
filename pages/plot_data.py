@@ -14,7 +14,7 @@ st.session_state["current_page"] = "plot"
 
 # ---------------- plotting functions ----------------
 def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='db', 
-                    ylabel='Elevation [m a.s.l.]', glac_name_dict={}, fig_fn=None, figsize=(9,6), bins2plot_lowerquantile=2, 
+                    ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
                     bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
     """" Heatmap plotting function """
     fig, ax = plt.subplots(figsize=figsize)
@@ -61,12 +61,7 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
     ax.set_ylim([set_ymin, set_ymax])
     cbar = fig.colorbar(cax, orientation='vertical', label=cbar_label)
 
-    if fig_fn is not None:
-        plt.savefig(fig_fn, dpi=300, transparent='true', bbox_inches='tight')
-        plt.close()
-    else:
-        plt.show()
-        
+    st.pyplot(fig) # plot figure   
 
 st.set_page_config(layout="wide", page_title="Snowline Plot")
 
@@ -176,13 +171,8 @@ else:
                     set_ymin=set_ymin,
                     set_ymax=set_ymax,
                     glacno=selected_id,
-                    fig_fn=None,  # show in notebook instead of saving
                     figsize=(12, 4),
                     line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
                                (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')]
                 )
-
-
-
-
 
