@@ -86,9 +86,38 @@ def fetch_snowline_data(rgi_no: str):
 
 
 # ---------------- Main page ----------------
+gdf = st.session_state.get("gdf", None)
 query_params = st.query_params
 rgi_no = query_params.get("rgi_no", None)
 
+# Allow manual input
+manual_input = st.text_input("Enter a glacier name or RGI number:")
+if manual_input and gdf is not None:
+    # Case-insensitive substring match on rgi_id or glac_name
+    matches = gdf[
+        gdf["rgi_id"].str.contains(manual_input, case=False, na=False) |
+        gdf["glac_name"].str.contains(manual_input, case=False, na=False)
+    ]
+
+    if not matches.empty:
+        if len(matches) == 1:
+            # Single match → use directly
+            rgi_id = matches.iloc[0]["rgi_id"]
+            st.success(f"Matched glacier: {rgi_id} (Name: {matches.iloc[0]['glac_name']})")
+        else:
+            # Multiple matches → show a selectbox popup
+            st.info(f"Found {len(matches)} possible matches. Please choose one:")
+            selected = st.selectbox(
+                "Select a glacier:",
+                matches["rgi_id"],
+                format_func=lambda rid: f"{rid} – {matches.loc[matches['rgi_id']==rid, 'glac_name'].values[0]}"
+            )
+            if selected:
+                rgi_id = selected
+        rgi_no = "01." + rgi_id[-5:]
+    else:
+        st.error("No matching glacier found.")
+          
 if rgi_no is None:
     # st.warning("No glacier selected. Go back to the map and click a glacier.")
     st.page_link("app.py", label="No glacier selected. Go back to the map and click a glacier.")
