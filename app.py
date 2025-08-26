@@ -62,7 +62,7 @@ with st.spinner("Plotting glaciers..."):
 
     # ---------------- Add outlines ----------------
     folium.GeoJson(
-        outline_gdf,
+        gdf, # outline_gdf
         style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
     ).add_to(m)
 
