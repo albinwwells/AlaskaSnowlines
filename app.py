@@ -79,7 +79,8 @@ if st.session_state.get("current_page") == "map":
             lat, lon = row.get("cenlat"), row.get("cenlon")
             if lat is not None and lon is not None:
                 rgi_no = "01." + row['rgi_id'][-5:]
-                plot_url = f"/?page=plot_data&rgi_no={rgi_no}"
+                # plot_url = f"/?page=plot_data&rgi_no={rgi_no}"
+                plot_url = f"https://alaskasnowlines.streamlit.app/plot_data?rgi_no={rgi_no}"
                 
                 popup_html = f"""
                 <b>RGI ID:</b> {row['rgi_id']}<br>
@@ -87,20 +88,16 @@ if st.session_state.get("current_page") == "map":
                 <b>Area:</b> {round(row['area_km2'], 1)} km2<br>
                 <b>Min elev:</b> {round(row['zmin_m'])} m<br>
                 <b>Max elev:</b> {round(row['zmax_m'])} m<br>
-                <button onclick="window.open('{plot_url}', '_blank')"
-                        style='padding:4px 8px; background:#007BFF; color:white; border:none; border-radius:4px; cursor:pointer; margin-top:5px;'>
+                <a href="{plot_url}" target="_blank" style="
+                    display:inline-block;
+                    margin-top:5px;
+                    padding:4px 8px;
+                    background:#007BFF;
+                    color:white;
+                    text-decoration:none;
+                    border-radius:4px;">
                     Plot snowline data
-                </button>
-                # <a href="{plot_url}" target="_blank" style="
-                #     display:inline-block;
-                #     margin-top:5px;
-                #     padding:4px 8px;
-                #     background:#007BFF;
-                #     color:white;
-                #     text-decoration:none;
-                #     border-radius:4px;">
-                #     Plot snowline data
-                # </a>
+                </a>
                 """
                 popup = folium.Popup(popup_html, max_width=500)
         
