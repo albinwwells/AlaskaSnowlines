@@ -66,7 +66,6 @@ st.set_page_config(layout="wide", page_title="Snowline Plot")
 @st.cache_data(show_spinner="Fetching glacier data...")
 def fetch_snowline_data(rgi_no: str):
     """Fetch snowline and melt extent CSVs from Zenodo for a given glacier number."""
-
     url = "https://zenodo.org/records/16947075/files/data.zip?download=1"
     response = requests.get(url)
     response.raise_for_status()
@@ -88,15 +87,13 @@ def fetch_snowline_data(rgi_no: str):
 
 # ---------------- Main page ----------------
 query_params = st.query_params
-rgi_id = query_params.get("rgi_id", None)
+rgi_no = query_params.get("rgi_no", None)
 
-if rgi_id is None:
+if rgi_no is None:
     st.warning("No glacier selected. Go back to the map and click a glacier.")
 else:
     # Convert RGI ID → RGI number (your convention: 01.xxxxx)
-    rgi_no = "01." + rgi_id[-5:]
     st.write(f"### Data for RGI v7 number {rgi_no}")
-
     sl_csvs, me_csvs, db_csvs, hyps_csvs, gzf = fetch_snowline_data(rgi_no)
 
     if sl_csvs is None:
