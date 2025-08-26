@@ -20,7 +20,7 @@ st.set_page_config(
 st.session_state["current_page"] = "map"
 if st.session_state.get("current_page") == "map":    
     # ---------------- Import shapefiles ----------------
-    ZENODO_URL = "https://zenodo.org/records/16947075/files/RGI2000-v7.0-G-01_alaska_2km2_reduc.gpkg.zip?download=1"
+    ZENODO_URL = "https://zenodo.org/records/16950695/files/RGI2000-v7.0-G-01_alaska_2km2_reduc.gpkg.zip?download=1"
     
     @st.cache_data(show_spinner="Loading glacier outlines...")
     def load_glaciers(url):
