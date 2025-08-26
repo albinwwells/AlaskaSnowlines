@@ -10,6 +10,7 @@ import os
 import io
 import tempfile
 
+st.session_state["current_page"] = "map"
 if st.session_state.get("current_page") == "map":
     # st.title("Alaska Snowlines")
     st.set_page_config(
