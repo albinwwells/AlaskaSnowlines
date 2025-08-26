@@ -63,23 +63,23 @@ with st.spinner("Plotting glaciers..."):
         style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
     ).add_to(m)
 
-    # # ---------------- Add clickable centroids ----------------
-    # for _, row in gdf.iterrows():
-    #     lat, lon = row.get("cenlat"), row.get("cenlon")
-    #     if lat is not None and lon is not None:
-    #         popup = (
-    #             f"RGI ID: {row['rgi_id']} | Name: {row['glac_name']}<br>"
-    #             f"Lat: {lat} | Lon: {lon} | "
-    #             f"Area: {row['area_km2']} sq.km | Min: {row['zmin_m']} m | Max: {row['zmax_m']} m"
-    #         )
-    #         folium.CircleMarker(
-    #             location=[lat, lon],
-    #             radius=3,
-    #             color="red",
-    #             fill=True,
-    #             fill_color="red",
-    #             popup=popup
-    #         ).add_to(m)
+    # ---------------- Add clickable centroids ----------------
+    for _, row in gdf.iterrows():
+        lat, lon = row.get("cenlat"), row.get("cenlon")
+        if lat is not None and lon is not None:
+            popup = (
+                f"RGI ID: {row['rgi_id']} | Name: {row['glac_name']}<br>"
+                f"Lat: {lat} | Lon: {lon} | "
+                f"Area: {row['area_km2']} sq.km | Min: {row['zmin_m']} m | Max: {row['zmax_m']} m"
+            )
+            folium.CircleMarker(
+                location=[lat, lon],
+                radius=3,
+                color="red",
+                fill=True,
+                fill_color="red",
+                popup=popup
+            ).add_to(m)
 
     # ---------------- Layers & render ----------------
     folium.LayerControl().add_to(m)
