@@ -90,7 +90,8 @@ query_params = st.query_params
 rgi_no = query_params.get("rgi_no", None)
 
 if rgi_no is None:
-    st.warning("No glacier selected. Go back to the map and click a glacier.")
+    # st.warning("No glacier selected. Go back to the map and click a glacier.")
+    st.page_link("app.py", label="No glacier selected. Go back to the map and click a glacier.")
 else:
     # Convert RGI ID → RGI number (your convention: 01.xxxxx)
     st.write(f"### Data for RGI v7 number {rgi_no}")
