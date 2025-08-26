@@ -44,6 +44,7 @@ def load_glaciers(url):
 # Load glaciers
 gdf = load_glaciers(ZENODO_URL)
 gdf = gdf[gdf["area_km2"] > 2].copy()
+gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
 
 # ---------------- Lightweight map ----------------
 with st.spinner("Simplifying geometries..."):
@@ -69,9 +70,9 @@ with st.spinner("Plotting glaciers..."):
         lat, lon = row.get("cenlat"), row.get("cenlon")
         if lat is not None and lon is not None:
             popup = (
-                f"RGI ID: {row['rgi_id']} | Name: {row['glac_name']}<br>"
-                f"Lat: {lat} | Lon: {lon} | "
-                f"Area: {row['area_km2']} sq.km | Min: {row['zmin_m']} m | Max: {row['zmax_m']} m"
+                f"RGI ID: {row['rgi_id'].split('G')[-1][1:]}<br>Name: {row['glac_name']}<br>"
+                f"Lat: {round(lat, 3)}<br>Lon: {round(lon, 3)}<br>"
+                f"Area: {round(row['area_km2'], 1)} sq.km<br>Min: {round(row['zmin_m'])} m<br>Max: {round(row['zmax_m'])} m"
             )
             folium.CircleMarker(
                 location=[lat, lon],
