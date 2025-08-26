@@ -70,14 +70,16 @@ with st.spinner("Plotting glaciers..."):
     for _, row in gdf.iterrows():
         lat, lon = row.get("cenlat"), row.get("cenlon")
         if lat is not None and lon is not None:
-            popup = f"""
+            popup_html = f"""
             <b>RGI ID:</b> {row['rgi_id']}<br>
             <b>Name:</b> {row['glac_name']}<br>
             <b>Area:</b> {round(row['area_km2'], 1)} sq.km<br>
             <button onclick="window.parent.postMessage({{'rgi_id': '{row['rgi_id']}'}}, '*')">
-                Get data
+                Plot snowline data
             </button>
             """
+            popup = folium.Popup(popup_html, max_width=500)
+    
             folium.CircleMarker(
                 location=[lat, lon],
                 radius=1,
@@ -104,7 +106,7 @@ if map_data and "last_object_clicked_popup" in map_data:
         selected_id = popup_html.split("RGI ID:")[1].split("<br>")[0].strip()
 
 # ---------------- Fetch CSV when glacier selected ----------------
-@st.cache_data(show_spinner="Fetching snowline data...")
+@st.cache_data(show_spinner="Fetching glacier data...")
 def fetch_snowline_data(glac_csvs):
     sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
     me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
