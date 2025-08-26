@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import geopandas as gpd
 import folium
 from folium.features import GeoJsonTooltip
@@ -69,11 +70,14 @@ with st.spinner("Plotting glaciers..."):
     for _, row in gdf.iterrows():
         lat, lon = row.get("cenlat"), row.get("cenlon")
         if lat is not None and lon is not None:
-            popup = (
-                f"RGI ID: {row['rgi_id'].split('G')[-1][1:]}<br>Name: {row['glac_name']}<br>"
-                f"Lat: {round(lat, 3)}<br>Lon: {round(lon, 3)}<br>"
-                f"Area: {round(row['area_km2'], 1)} sq.km<br>Min: {round(row['zmin_m'])} m<br>Max: {round(row['zmax_m'])} m"
-            )
+            popup = f"""
+            <b>RGI ID:</b> {row['rgi_id']}<br>
+            <b>Name:</b> {row['glac_name']}<br>
+            <b>Area:</b> {round(row['area_km2'], 1)} sq.km<br>
+            <button onclick="window.parent.postMessage({{'rgi_id': '{row['rgi_id']}'}}, '*')">
+                Get data
+            </button>
+            """
             folium.CircleMarker(
                 location=[lat, lon],
                 radius=1,
@@ -92,15 +96,41 @@ folium.LayerControl().add_to(m)
 # Render map and capture clicks
 map_data = st_folium(m, width=1000, height=600)
 
-# # ---------------- Show popup_fields dynamically on click ----------------
-# popup_fields = ["rgi_id", "glac_name", "cenlat", "cenlon", "area_km2", "zmin_m", "zmax_m"]
-# existing_fields = [f for f in popup_fields if f in gdf.columns]
 
-# if map_data and "last_active_drawing" in map_data and map_data["last_active_drawing"]:
-#     feature = map_data["last_active_drawing"]
-#     rgi_id = feature["properties"].get("rgi_id")
-#     if rgi_id:
-#         st.write("Selected glacier RGI ID:", rgi_id)
-#         row = gdf[gdf["rgi_id"] == rgi_id]
-#         st.write(row[existing_fields])
+selected_id = None
+if map_data and "last_object_clicked_popup" in map_data:
+    popup_html = map_data["last_object_clicked_popup"]
+    if popup_html and "RGI ID:" in popup_html:
+        selected_id = popup_html.split("RGI ID:")[1].split("<br>")[0].strip()
+
+# ---------------- Fetch CSV when glacier selected ----------------
+@st.cache_data(show_spinner="Fetching snowline data...")
+def fetch_snowline_data(glac_csvs):
+    sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
+    me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
+    return sl_csvs, me_csvs
+    
+if selected_id:
+    rgi_no = "01." + selected_id[-5:]
+    st.write(f"### Data for RGI v7 number {rgi_no}")
+
+    url = "https://zenodo.org/records/16944113/files/data.zip?download=1"
+    response = requests.get(url)
+    response.raise_for_status()
+    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+        file_name = f"{rgi_no}.zip"
+        if file_name in zf.namelist():
+            with zf.open(file_name) as glacier_zip:
+                with zipfile.ZipFile(glacier_zip) as gzf:            
+                    glac_csvs = gzf.namelist()
+                    sl_csvs, me_csvs = fetch_snowline_data(glac_csvs)
+
+                    for sl_csv in sl_csvs:
+                        with gzf.open(sl_csv) as f:
+                            df = pd.read_csv(f)
+                            st.dataframe(df)
+                            # your plotting code goes here
+
+
+
 
