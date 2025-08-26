@@ -93,12 +93,12 @@ with st.spinner("Plotting glaciers..."):
 
     # ---------------- Layers & render ----------------
     folium.LayerControl().add_to(m)
-    st_folium(m, width=1000, height=600)
+    st_folium(m, width=800, height=600)
 
 folium.LayerControl().add_to(m)
 
 # Render map and capture clicks
-map_data = st_folium(m, width=1000, height=600)
+map_data = st_folium(m, width=800, height=600)
 
 
 selected_id = None
