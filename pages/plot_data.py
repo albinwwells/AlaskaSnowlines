@@ -123,15 +123,14 @@ def fetch_snowline_data(rgi_no: str):
     json_url = "https://zenodo.org/records/16950695/files/rgi_data_links.json?download=1"
     response = requests.get(json_url)
     response.raise_for_status()
-    rgi_index = response.json()  # dictionary: rgi_no -> zip URL
-
-    rgi_key = rgi_no + ".zip"
+    rgi_index = response.json()  # dictionary: rgi_no to zip URL
+    rgi_key = (rgi_no + ".zip").strip()
 
     # Get the URL for the specific glacier
     try:
         zip_name = rgi_index[rgi_key]
-    except:
-        st.write(rgi_key)
+    except KeyError:
+        st.write(f"Key not found: '{rgi_key}'")
         return None, None, None, None, None
         
     zip_url = f"https://zenodo.org/records/16950695/files/{zip_name}?download=1"
