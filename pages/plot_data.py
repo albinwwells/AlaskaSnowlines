@@ -97,7 +97,7 @@ def fetch_snowline_data(rgi_no: str):
         me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
         db_csvs = [f.replace("snowline_elev_percentile", "db_bin_mean") for f in sl_csvs]
         hyps_csvs = [f.replace("snowline_elev_percentile", "hypsometry") for f in sl_csvs]
-        return sl_csvs, me_csvs, db_csvs, hyps_csvs, gzf
+        return sl_csvs, me_csvs, db_csvs, hyps_csvs
 
 
 # ---------------- Main page ----------------
@@ -139,7 +139,7 @@ if rgi_no is None:
 else:
     # Convert RGI ID → RGI number (your convention: 01.xxxxx)
     st.write(f"### Data for RGI v7: {rgi_no}")
-    sl_csvs, me_csvs, db_csvs, hyps_csvs, gzf = fetch_snowline_data(rgi_no)
+    sl_csvs, me_csvs, db_csvs, hyps_csvs = fetch_snowline_data(rgi_no)
 
     if sl_csvs is None:
         st.error("No snowline data found for this glacier.")
