@@ -1,5 +1,7 @@
 streamlit
 geopandas
+pandas
+numpy
 folium
 streamlit-folium
 requests
