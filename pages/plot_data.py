@@ -130,7 +130,7 @@ if rgi_no is None:
     st.page_link("app.py", label="No glacier selected. Go back to the map and click a glacier.")
 else:
     # Convert RGI ID → RGI number (your convention: 01.xxxxx)
-    st.write(f"### Data for RGI v7 number {rgi_no}")
+    st.write(f"### Data for RGI v7: {rgi_no}")
     sl_csvs, me_csvs, db_csvs, hyps_csvs, gzf = fetch_snowline_data(rgi_no)
 
     if sl_csvs is None:
