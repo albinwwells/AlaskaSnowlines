@@ -13,106 +13,106 @@ st.set_page_config(
 st.session_state["current_page"] = "plot"
 
 # ---------------- plotting functions ----------------
-def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno,
-                    cmap='RdYlBu', cbar_label='db', ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6),
-                    bins2plot_lowerquantile=2, bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
-    """Heatmap plotting function for Streamlit."""
+# def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno,
+#                     cmap='RdYlBu', cbar_label='db', ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6),
+#                     bins2plot_lowerquantile=2, bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
+#     """Heatmap plotting function for Streamlit."""
     
-    fig, ax = plt.subplots(figsize=figsize)
-    
-    # interpolate to 12-day intervals
-    dates_12d = pd.date_range(dates[frame_cut], dates[-1], freq='12D')
-    db_bin_12d = np.full((db_bin.shape[0], len(dates_12d)), np.nan)
-    
-    for ndate, date in enumerate(dates_12d):
-        if date in dates:
-            idx = np.where(dates == date)[0][0]
-            db_bin_12d[:, ndate] = db_bin[:, idx]
-
-    # set color scale
-    dbmin = np.nanpercentile(db_bin, bins2plot_lowerquantile)
-    dbmax = np.nanpercentile(db_bin, bins2plot_upperquantile)
-
-    bin_sizes = np.diff(bins_center)
-    bin_halfsize = bin_sizes[0]/2
-    if ylabel == 'Elevation [m a.s.l.]':
-        assert np.all(bin_sizes == bin_sizes[0]), "Elevation bins not regularly spaced."
-
-    # plot heatmap
-    cax = ax.imshow(
-        db_bin_12d, cmap=cmap, vmin=dbmin, vmax=dbmax,
-        interpolation='nearest', aspect='auto', origin='lower',
-        extent=[dates_12d[0], dates_12d[-1], set_ymin, set_ymax]
-    )
-
-    # optional additional line plots
-    for data in kwargs.get('line_plot', []):
-        x, y, c, ls, lw, label = data
-        ax.plot(x, y, c=c, ls=ls, lw=lw, label=label)
-    if kwargs.get('line_plot'):
-        ax.legend(loc='lower right')
-
-    # title
-    glac_name = glac_name_dict.get(glacno, str(glacno))
-    ax.set_title(glac_name + title_info)
-    ax.set_ylabel(ylabel)
-    ax.set_xlim([dates_12d[0], dates_12d[-1]])
-    ax.set_ylim([set_ymin, set_ymax])
-
-    # colorbar
-    fig.colorbar(cax, orientation='vertical', label=cbar_label)
-
-    # display
-    st.pyplot(fig)
-# def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='db', 
-#                     ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
-#                     bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
-#     """" Heatmap plotting function """
 #     fig, ax = plt.subplots(figsize=figsize)
     
+#     # interpolate to 12-day intervals
 #     dates_12d = pd.date_range(dates[frame_cut], dates[-1], freq='12D')
-#     dates_12d_str = [x.strftime('%Y%m%d') for x in dates_12d]
-#     db_bin_12d = np.zeros((db_bin.shape[0], len(dates_12d)))
-#     db_bin_12d[:] = np.nan
-#     dates_str = []
-#     for ndate, date in enumerate(dates_12d_str):
-#         date_np = np.datetime64(f'{date[:4]}-{date[4:6]}-{date[6:]}').astype('datetime64[ns]')
-#         if date_np in dates:
-#             date_idx = np.where(dates == date_np)[0][0]
-#             db_bin_12d[:,ndate] = db_bin[:,date_idx]
-#             dates_str.append(date)
+#     db_bin_12d = np.full((db_bin.shape[0], len(dates_12d)), np.nan)
+    
+#     for ndate, date in enumerate(dates_12d):
+#         if date in dates:
+#             idx = np.where(dates == date)[0][0]
+#             db_bin_12d[:, ndate] = db_bin[:, idx]
 
-#     dbmin = np.nanpercentile(db_bin, 2)
-#     dbmax = np.nanpercentile(db_bin, 98)
+#     # set color scale
+#     dbmin = np.nanpercentile(db_bin, bins2plot_lowerquantile)
+#     dbmax = np.nanpercentile(db_bin, bins2plot_upperquantile)
 
 #     bin_sizes = np.diff(bins_center)
 #     bin_halfsize = bin_sizes[0]/2
 #     if ylabel == 'Elevation [m a.s.l.]':
-#         assert np.all(bin_sizes == bin_sizes[0]) == True, 'Elevation bins are not regularly spaced.'
+#         assert np.all(bin_sizes == bin_sizes[0]), "Elevation bins not regularly spaced."
 
-#     cax = ax.imshow(db_bin_12d, cmap=cmap, vmin=dbmin, vmax=dbmax, interpolation='nearest', aspect='auto', 
-#                     origin='lower', extent=[dates_12d[0], dates_12d[-1], set_ymin, set_ymax])
+#     # plot heatmap
+#     cax = ax.imshow(
+#         db_bin_12d, cmap=cmap, vmin=dbmin, vmax=dbmax,
+#         interpolation='nearest', aspect='auto', origin='lower',
+#         extent=[dates_12d[0], dates_12d[-1], set_ymin, set_ymax]
+#     )
 
-#     # plot additional data from **kwargs
-#     line_plot = kwargs.get('line_plot', [])
-#     if line_plot:
-#         for data in line_plot:
-#             x, y, c, ls, lw, label = data
-#             ax.plot(x, y, c=c, ls=ls, lw=lw, label=label)
+#     # optional additional line plots
+#     for data in kwargs.get('line_plot', []):
+#         x, y, c, ls, lw, label = data
+#         ax.plot(x, y, c=c, ls=ls, lw=lw, label=label)
+#     if kwargs.get('line_plot'):
 #         ax.legend(loc='lower right')
 
-#     # label by glacier number or name, if available
-#     if glacno in glac_name_dict.keys():
-#         glac_name = glac_name_dict[glacno]
-#     else:
-#         glac_name = str(glacno)
-#     ax.set_title(glac_name+title_info)
+#     # title
+#     glac_name = glac_name_dict.get(glacno, str(glacno))
+#     ax.set_title(glac_name + title_info)
 #     ax.set_ylabel(ylabel)
 #     ax.set_xlim([dates_12d[0], dates_12d[-1]])
 #     ax.set_ylim([set_ymin, set_ymax])
-#     cbar = fig.colorbar(cax, orientation='vertical', label=cbar_label)
 
-#     st.pyplot(fig) # plot figure   
+#     # colorbar
+#     fig.colorbar(cax, orientation='vertical', label=cbar_label)
+
+#     # display
+#     st.pyplot(fig)
+def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='db', 
+                    ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
+                    bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
+    """" Heatmap plotting function """
+    fig, ax = plt.subplots(figsize=figsize)
+    
+    dates_12d = pd.date_range(dates[frame_cut], dates[-1], freq='12D')
+    dates_12d_str = [x.strftime('%Y%m%d') for x in dates_12d]
+    db_bin_12d = np.zeros((db_bin.shape[0], len(dates_12d)))
+    db_bin_12d[:] = np.nan
+    dates_str = []
+    for ndate, date in enumerate(dates_12d_str):
+        date_np = np.datetime64(f'{date[:4]}-{date[4:6]}-{date[6:]}').astype('datetime64[ns]')
+        if date_np in dates:
+            date_idx = np.where(dates == date_np)[0][0]
+            db_bin_12d[:,ndate] = db_bin[:,date_idx]
+            dates_str.append(date)
+
+    dbmin = np.nanpercentile(db_bin, 2)
+    dbmax = np.nanpercentile(db_bin, 98)
+
+    bin_sizes = np.diff(bins_center)
+    bin_halfsize = bin_sizes[0]/2
+    if ylabel == 'Elevation [m a.s.l.]':
+        assert np.all(bin_sizes == bin_sizes[0]) == True, 'Elevation bins are not regularly spaced.'
+
+    cax = ax.imshow(db_bin_12d, cmap=cmap, vmin=dbmin, vmax=dbmax, interpolation='nearest', aspect='auto', 
+                    origin='lower', extent=[dates_12d[0], dates_12d[-1], set_ymin, set_ymax])
+
+    # plot additional data from **kwargs
+    line_plot = kwargs.get('line_plot', [])
+    if line_plot:
+        for data in line_plot:
+            x, y, c, ls, lw, label = data
+            ax.plot(x, y, c=c, ls=ls, lw=lw, label=label)
+        ax.legend(loc='lower right')
+
+    # label by glacier number or name, if available
+    if glacno in glac_name_dict.keys():
+        glac_name = glac_name_dict[glacno]
+    else:
+        glac_name = str(glacno)
+    ax.set_title(glac_name+title_info)
+    ax.set_ylabel(ylabel)
+    ax.set_xlim([dates_12d[0], dates_12d[-1]])
+    ax.set_ylim([set_ymin, set_ymax])
+    cbar = fig.colorbar(cax, orientation='vertical', label=cbar_label)
+
+    return fig
 
 st.set_page_config(layout="wide", page_title="Snowline Plot")
 
@@ -217,16 +217,10 @@ else:
     
                 # ---------------- Plot ----------------
                 st.write(f"### Plot for {sl_csv}")
-                plot_db_heatmap(
-                    db_bin=glac_binned_data,
-                    dates=dates,
-                    bins_center=glac_zbins_center,
-                    binned_area=binned_area,
-                    set_ymin=set_ymin,
-                    set_ymax=set_ymax,
-                    glacno=selected_id,
-                    figsize=(12, 4),
-                    line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
-                               (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')]
-                )
+                fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
+                                      binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
+                                      glacno=selected_id, figsize=(12, 4), 
+                                      line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
+                                                 (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+                st.pyplot(fig)
 
