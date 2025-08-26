@@ -53,7 +53,8 @@ with st.spinner("Simplifying geometries..."):
 with st.spinner("Plotting glaciers..."):
     # ---------------- Map ----------------
     bounds = gdf.total_bounds
-    center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
+    # center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
+    center = [63.5, -151.0]
 
     m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
 
