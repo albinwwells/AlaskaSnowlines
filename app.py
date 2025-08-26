@@ -75,10 +75,10 @@ with st.spinner("Plotting glaciers..."):
             )
             folium.CircleMarker(
                 location=[lat, lon],
-                radius=3,
-                color="red",
+                radius=1,
+                color="blue",
                 fill=True,
-                fill_color="red",
+                fill_color="blue",
                 popup=popup
             ).add_to(m)
 
