@@ -126,6 +126,7 @@ def fetch_snowline_data(rgi_no: str):
     rgi_index = response.json()  # dictionary: rgi_no -> zip URL
 
     rgi_key = rgi_no + ".zip"
+    st.write(rgi_key, rgi_no, rgi_index)
     if rgi_key not in rgi_index:
         return None, None, None, None, None  # glacier not available
 
@@ -186,6 +187,7 @@ else:
     # Convert RGI ID → RGI number (your convention: 01.xxxxx)
     st.write(f"### Data for RGI v7: {rgi_no}")
     sl_csvs, me_csvs, db_csvs, hyps_csvs = fetch_snowline_data(rgi_no)
+    st.write(sl_csvs)
 
     if sl_csvs is None:
         st.error("No snowline data found for this glacier.")
