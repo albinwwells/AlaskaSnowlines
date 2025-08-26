@@ -4,6 +4,11 @@ import numpy as np
 import requests, zipfile, io
 import matplotlib.pyplot as plt
 
+st.set_page_config(
+    page_title="Alaska Snowlines",
+    layout="wide",         # optional: wide layout
+    initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
+)
 st.session_state["current_page"] = "plot"
 
 # ---------------- plotting functions ----------------
