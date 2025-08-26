@@ -1,6 +1,7 @@
 streamlit
 geopandas
 pandas
+json
 numpy
 folium
 streamlit-folium
