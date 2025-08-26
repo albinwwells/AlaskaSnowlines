@@ -77,7 +77,7 @@ if st.session_state.get("current_page") == "map":
             lat, lon = row.get("cenlat"), row.get("cenlon")
             if lat is not None and lon is not None:
                 rgi_no = "01." + row['rgi_id'][-5:]
-                plot_url = f"/?page=plot_data&rgi_id={rgi_no}"
+                plot_url = f"/?page=plot_data&rgi_no={rgi_no}"
                 
                 popup_html = f"""
                 <b>RGI ID:</b> {row['rgi_id']}<br>
