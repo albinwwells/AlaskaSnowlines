@@ -158,8 +158,6 @@ else:
                 dates_sl_per = np.array(sl_df.index.tolist()).astype('datetime64[ns]')
                 sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())
     
-
-
                 # ---------------- Plot ----------------
                 st.write(f"### Plot for {sl_csv}")
                 plot_db_heatmap(
