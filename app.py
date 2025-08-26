@@ -48,9 +48,9 @@ gdf = gdf[gdf["area_km2"] > 2].copy()
 gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
 
 # ---------------- Lightweight map ----------------
-with st.spinner("Simplifying glacier geometries..."):
-    outline_gdf = gdf[["geometry"]].copy()
-    outline_gdf["geometry"] = outline_gdf.geometry.simplify(tolerance=0.001, preserve_topology=True) # simplify to help plotting
+# with st.spinner("Simplifying glacier geometries..."):
+#     outline_gdf = gdf[["geometry"]].copy()
+#     outline_gdf["geometry"] = outline_gdf.geometry.simplify(tolerance=0.001, preserve_topology=True) # simplify to help plotting
 
 with st.spinner("Plotting glaciers..."):
     # ---------------- Map ----------------
@@ -76,9 +76,16 @@ with st.spinner("Plotting glaciers..."):
             <b>Area:</b> {round(row['area_km2'], 1)} km2<br>
             <b>Min elev:</b> {round(row['zmin_m'])} m<br>
             <b>Max elev:</b> {round(row['zmax_m'])} m<br>
-            <button onclick="window.parent.postMessage({{'rgi_id': '{row['rgi_id']}'}}, '*')">
+            <a href="/Snowline_Plot?rgi_id={row['rgi_id']}" target="_blank" style="
+                display:inline-block;
+                margin-top:5px;
+                padding:4px 8px;
+                background:#007BFF;
+                color:white;
+                text-decoration:none;
+                border-radius:4px;">
                 Plot snowline data
-            </button>
+            </a>
             """
             popup = folium.Popup(popup_html, max_width=500)
     
@@ -101,39 +108,39 @@ folium.LayerControl().add_to(m)
 map_data = st_folium(m, width=800, height=600)
 
 
-selected_id = None
-if map_data and "last_object_clicked_popup" in map_data:
-    popup_html = map_data["last_object_clicked_popup"]
-    if popup_html and "RGI ID:" in popup_html:
-        selected_id = popup_html.split("RGI ID:")[1].split("<br>")[0].strip()
+# selected_id = None
+# if map_data and "last_object_clicked_popup" in map_data:
+#     popup_html = map_data["last_object_clicked_popup"]
+#     if popup_html and "RGI ID:" in popup_html:
+#         selected_id = popup_html.split("RGI ID:")[1].split("<br>")[0].strip()
 
-# ---------------- Fetch CSV when glacier selected ----------------
-@st.cache_data(show_spinner="Fetching glacier data...")
-def fetch_snowline_data(glac_csvs):
-    sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
-    me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
-    return sl_csvs, me_csvs
+# # ---------------- Fetch CSV when glacier selected ----------------
+# @st.cache_data(show_spinner="Fetching glacier data...")
+# def fetch_snowline_data(glac_csvs):
+#     sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
+#     me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
+#     return sl_csvs, me_csvs
     
-if selected_id:
-    rgi_no = "01." + selected_id[-5:]
-    st.write(f"### Data for RGI v7 number {rgi_no}")
+# if selected_id:
+#     rgi_no = "01." + selected_id[-5:]
+#     st.write(f"### Data for RGI v7 number {rgi_no}")
 
-    url = "https://zenodo.org/records/16947075/files/data.zip?download=1"
-    response = requests.get(url)
-    response.raise_for_status()
-    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-        file_name = f"{rgi_no}.zip"
-        if file_name in zf.namelist():
-            with zf.open(file_name) as glacier_zip:
-                with zipfile.ZipFile(glacier_zip) as gzf:            
-                    glac_csvs = gzf.namelist()
-                    sl_csvs, me_csvs = fetch_snowline_data(glac_csvs)
+#     url = "https://zenodo.org/records/16947075/files/data.zip?download=1"
+#     response = requests.get(url)
+#     response.raise_for_status()
+#     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+#         file_name = f"{rgi_no}.zip"
+#         if file_name in zf.namelist():
+#             with zf.open(file_name) as glacier_zip:
+#                 with zipfile.ZipFile(glacier_zip) as gzf:            
+#                     glac_csvs = gzf.namelist()
+#                     sl_csvs, me_csvs = fetch_snowline_data(glac_csvs)
 
-                    for sl_csv in sl_csvs:
-                        with gzf.open(sl_csv) as f:
-                            df = pd.read_csv(f)
-                            st.dataframe(df)
-                            # your plotting code goes here
+#                     for sl_csv in sl_csvs:
+#                         with gzf.open(sl_csv) as f:
+#                             df = pd.read_csv(f)
+#                             st.dataframe(df)
+#                             # your plotting code goes here
 
 
 
