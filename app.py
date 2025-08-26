@@ -70,13 +70,15 @@ with st.spinner("Plotting glaciers..."):
     for _, row in gdf.iterrows():
         lat, lon = row.get("cenlat"), row.get("cenlon")
         if lat is not None and lon is not None:
+            plot_url = f"/?page=plot_data&rgi_id={rgi_id}"
+            
             popup_html = f"""
             <b>RGI ID:</b> {row['rgi_id']}<br>
             <b>Name:</b> {row['glac_name']}<br>
             <b>Area:</b> {round(row['area_km2'], 1)} km2<br>
             <b>Min elev:</b> {round(row['zmin_m'])} m<br>
             <b>Max elev:</b> {round(row['zmax_m'])} m<br>
-            <a href="/Snowline_Plot?rgi_id={row['rgi_id']}" target="_blank" style="
+            <a href="{plot_url}" target="_blank" style="
                 display:inline-block;
                 margin-top:5px;
                 padding:4px 8px;
