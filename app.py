@@ -10,15 +10,15 @@ import os
 import io
 import tempfile
 
+# st.title("Alaska Snowlines")
+st.set_page_config(
+    page_title="Alaska Snowlines",
+    layout="wide",         # optional: wide layout
+    initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
+)
+
 st.session_state["current_page"] = "map"
-if st.session_state.get("current_page") == "map":
-    # st.title("Alaska Snowlines")
-    st.set_page_config(
-        page_title="Alaska Snowlines",
-        layout="wide",         # optional: wide layout
-        initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
-    )
-    
+if st.session_state.get("current_page") == "map":    
     # ---------------- Import shapefiles ----------------
     ZENODO_URL = "https://zenodo.org/records/16947075/files/RGI2000-v7.0-G-01_alaska_2km2_reduc.gpkg.zip?download=1"
     
