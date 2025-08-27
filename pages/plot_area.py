@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import json
 import datetime
+import threading
 import requests, zipfile, io, os
 import matplotlib.pyplot as plt
 
@@ -20,6 +21,8 @@ hide_sidebar_style = """
 """
 st.markdown(hide_sidebar_style, unsafe_allow_html=True)
 st.session_state["current_page"] = "plot_area"
+
+mpl_lock = threading.Lock()
 
 # ---------------- plotting functions ----------------
 def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='Backscatter [dB]', 
@@ -217,9 +220,10 @@ else:
                 sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())/1e6
     
                 # ---------------- Plot ----------------
-                fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
-                                      binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
-                                      glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
-                                      line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
-                                                 (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+                with mpl_lock:
+                    fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
+                                          binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
+                                          glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
+                                          line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
+                                                     (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
                 st.pyplot(fig)
