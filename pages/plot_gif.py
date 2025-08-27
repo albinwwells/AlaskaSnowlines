@@ -1,10 +1,7 @@
 import streamlit as st
+import geopandas as gpd
 import pandas as pd
-import numpy as np
-import json
-import datetime
-import requests, zipfile, io, os
-import matplotlib.pyplot as plt
+import requests, zipfile, io
 
 st.set_page_config(
     page_title="Animation",
@@ -82,14 +79,19 @@ else:
     # Path to your GIF zip file
     gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
 
-    gif_pattern = os.path.join(gif_dir, f"{rgi_no}_*_animation.html")
-    matching_gifs = glob.glob(gif_pattern)
-    if matching_gifs:
-        for gif_file in matching_gifs:
-            st.write(f"Showing {os.path.basename(gif_file)}")
-            with open(gif_file, "r") as f:
-                html_content = f.read()
-            st.components.v1.html(html_content, height=500)
-    else:
-        st.error(f"No animation available for {rgi_no} Glacier.")
+    response = requests.get(gif_zip_fp)
+    response.raise_for_status()
 
+    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+        # Find matching files inside the ZIP
+        matching_files = [f for f in zf.namelist() if f.startswith(rgi_no) and f.endswith("_animation.html")]
+
+        if matching_files:
+            for fname in matching_files:
+                st.write(f"Showing {fname}")
+                # Read file directly from ZIP
+                with zf.open(fname) as f:
+                    html_content = f.read().decode()
+                st.components.v1.html(html_content, height=500)
+        else:
+            st.error(f"No animation available for {rgi_no} Glacier.")
