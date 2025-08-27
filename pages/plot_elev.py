@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import json
+import datetime
 import requests, zipfile, io, os
 import matplotlib.pyplot as plt
 
@@ -160,12 +161,16 @@ if manual_input is not None:
             st.error("No matching glacier found.")
 
 # ---------------- filter date range ----------------
-date_start = st.text_input("Plot start date (YYYY-MM-DD):", value="2017-01-01")
-date_end = st.text_input("Plot end date (YYYY-MM-DD):", value="2025-01-01")
 def dates_filter_for_plotting(df, date_start='2017-01-01', date_end='2025-01-01'):
     df.columns = pd.to_datetime(df.columns)
     df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
     return df_filt
+
+default_start = datetime.date(2017, 1, 1)
+default_end = datetime.date(2025, 1, 1)
+date_range = st.slider("Select plot date range:", min_value=datetime.date(2016, 1, 1), max_value=datetime.date(2025, 1, 1),
+                       value=(default_start, default_end), format="YYYY-MM-DD")
+date_start, date_end = date_range
 
 # plot data
 rgi_no = rgi_no_man if rgi_no_man is not None else rgi_no_map
