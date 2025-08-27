@@ -58,10 +58,10 @@ if st.session_state.get("current_page") == "map":
         gdf = gpd.read_file(gpkg_path)
         return gdf
     
-    # # Load glaciers
-    # gdf = load_glaciers(ZENODO_URL)
-    # gdf = gdf[gdf["area_km2"] > 2].copy()
-    # gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
+    # Load glaciers
+    gdf = load_glaciers(ZENODO_URL)
+    gdf = gdf[gdf["area_km2"] > 2].copy()
+    gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
 
     with st.spinner("Loading possible glaciers..."):
         csv_url = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
