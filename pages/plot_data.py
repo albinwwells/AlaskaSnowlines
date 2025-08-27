@@ -120,7 +120,7 @@ st.set_page_config(layout="wide", page_title="Snowline Plot")
 @st.cache_data(show_spinner="Fetching glacier data...")
 def fetch_snowline_data(rgi_no: str):
     """Fetch snowline and melt extent CSVs from Zenodo for a given glacier number."""
-    json_url = "https://zenodo.org/records/16950695/files/rgi_data_links.json?download=1"
+    json_url = "https://zenodo.org/records/16956246/files/rgi_data_links.json?download=1"
     response = requests.get(json_url)
     response.raise_for_status()
     rgi_index = response.json()  # dictionary: rgi_no to zip URL
@@ -133,7 +133,7 @@ def fetch_snowline_data(rgi_no: str):
         st.write(f"Key not found: '{rgi_key}'")
         return None, None, None, None, None
         
-    zip_url = f"https://zenodo.org/records/16950695/files/{zip_name}?download=1"
+    zip_url = f"https://zenodo.org/records/16956246/files/{zip_name}?download=1"
 
     # Download the zip
     response = requests.get(zip_url)
