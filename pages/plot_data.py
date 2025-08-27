@@ -132,7 +132,7 @@ if manual_input is not None:
                 # Download ZIP
                 response = requests.get(url)
                 response.raise_for_status()
-                gdf = pd.read_csv(StringIO(response.text))
+                gdf = pd.read_csv(io.StringIO(response.text))
                 return gdf
         
             # Load glaciers
