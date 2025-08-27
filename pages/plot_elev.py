@@ -158,7 +158,16 @@ if manual_input is not None:
     else:
         if matches.empty:
             st.error("No matching glacier found.")
-          
+
+# ---------------- filter date range ----------------
+date_start = st.text_input("Plot start date (YYYY-MM-DD):", value="2017-01-01")
+date_end = st.text_input("Plot end date (YYYY-MM-DD):", value="2025-01-01")
+def dates_filter_for_plotting(df, date_start='2017-01-01', date_end='2025-01-01'):
+    df.columns = pd.to_datetime(df.columns)
+    df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
+    return df_filt
+
+# plot data
 rgi_no = rgi_no_man if rgi_no_man is not None else rgi_no_map
 if rgi_no is None:
     # st.warning("No glacier selected. Go back to the map and click a glacier.")
@@ -178,6 +187,7 @@ else:
                 me_df = pd.read_csv(io.StringIO(me_df), index_col=0)
                 me_df.index = pd.to_datetime(me_df.index, format='%Y-%m-%d')
                 db_df = pd.read_csv(io.StringIO(db_df), index_col=0)
+                db_df = dates_filter_for_plotting(db_df, date_start=date_start, date_end=date_end)
                 hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
                 
                 glac_zbins_center = np.array(hyps_df.index.tolist())
