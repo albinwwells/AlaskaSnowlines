@@ -89,7 +89,10 @@ def fetch_snowline_data(rgi_no: str):
     # rgi_index = response.json()  # dictionary: rgi_no to zip URL
     
     rgi_key = (rgi_no + ".zip").strip()
-    zip_name = rgi_index[rgi_key]
+    try:
+        zip_name = rgi_index[rgi_key]
+    except:
+        st.error(f"No data found for gacier {rgi_no}.")
     zip_url = f"https://zenodo.org/records/16961713/files/{zip_name}?download=1"
     
     # Download the outer zip
@@ -137,31 +140,6 @@ if manual_input is not None:
         gdf = load_glaciers(csv_path)
         gdf = gdf[gdf["area_km2"] > 2].copy()
         gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
-        
-        # @st.cache_data(show_spinner="Loading glacier outlines...")
-        # def load_glaciers(url):
-        #     # Persistent cache folder
-        #     cache_dir = "/tmp/alaska_glaciers"
-        #     os.makedirs(cache_dir, exist_ok=True)
-        
-        #     csv_path = os.path.join(cache_dir, "RGI2000-v7.0-G-01_alaska.csv")
-        
-        #     # If already downloaded, read from cache
-        #     if os.path.exists(csv_path):
-        #         gdf = gpd.read_file(csv_path)
-        #         return gdf
-        
-        #     # Download ZIP
-        #     response = requests.get(url)
-        #     response.raise_for_status()
-        #     gdf = pd.read_csv(io.StringIO(response.text))
-        #     return gdf
-    
-        # # Load glaciers
-        # ZENODO_URL = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
-        # gdf = load_glaciers(ZENODO_URL)
-        # gdf = gdf[gdf["area_km2"] > 2].copy()
-        # gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
 
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
