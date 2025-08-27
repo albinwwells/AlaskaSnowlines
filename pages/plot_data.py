@@ -108,8 +108,7 @@ query_params = st.query_params
 rgi_no = query_params.get("rgi_no", None)
 
 # Allow manual input
-manual_input = st.text_input("Enter a glacier name or RGI number:", value="")
-
+manual_input = st.text_input("Enter a glacier name or RGI number:")
 if manual_input and gdf is not None:
     st.write('here')
     rgi_no = None
@@ -131,9 +130,7 @@ if manual_input and gdf is not None:
                 matches["rgi_id"],
                 format_func=lambda rid: f"{rid} – {matches.loc[matches['rgi_id']==rid, 'glac_name'].values[0]}"
             )
-            if selected:
-                rgi_id = selected
-        rgi_no = "01." + rgi_id[-5:]
+        rgi_no = "01." + selected[-5:]
     else:
         st.error("No matching glacier found.")
           
@@ -154,7 +151,7 @@ else:
             sl_df.index = pd.to_datetime(sl_df.index, format='%Y-%m-%d')
             me_df = pd.read_csv(io.StringIO(me_df), index_col=0)
             me_df.index = pd.to_datetime(me_df.index, format='%Y-%m-%d')
-            db_df = pd.read_csv(io.StringIO(db_df))
+            db_df = pd.read_csv(io.StringIO(db_df), index_col=0)
             hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
             
             glac_zbins_center = np.array(hyps_df.index.tolist())
