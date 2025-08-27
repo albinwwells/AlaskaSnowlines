@@ -186,15 +186,15 @@ else:
                 glac_bin_sizes = np.diff(glac_zbins_center)
                 glac_bin_halfsize = glac_bin_sizes[0]/2
                 binned_area = np.array(hyps_df.iloc[:, 0].tolist())
-                set_ymin, set_ymax = glac_zbins_center[0]-glac_bin_halfsize, glac_zbins_center[-1]+glac_bin_halfsize
+                set_ymin, set_ymax = 0, np.sum(binned_area)/1e6
     
                 dates = np.array(db_df.columns.tolist()).astype('datetime64[ns]')
                 glac_binned_data = np.array(db_df.to_numpy())
             
                 dates_per = np.array(me_df.index.tolist()).astype('datetime64[ns]')
-                me_elev_per = np.array(me_df.iloc[:, 0].tolist())
+                me_elev_per = np.array(me_df.iloc[:, 0].tolist())//1e6
                 dates_sl_per = np.array(sl_df.index.tolist()).astype('datetime64[ns]')
-                sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())
+                sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())//1e6
     
                 # ---------------- Plot ----------------
                 fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
