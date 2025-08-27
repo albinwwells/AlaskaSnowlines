@@ -61,7 +61,7 @@ if st.session_state.get("current_page") == "map":
     gdf = load_glaciers(ZENODO_URL)
     gdf = gdf[gdf["area_km2"] > 2].copy()
     gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
-    st.session_state["gdf"] = gdf
+    # st.session_state["gdf"] = gdf
     
     # ---------------- Lightweight map ----------------
     # with st.spinner("Simplifying glacier geometries..."):
