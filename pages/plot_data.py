@@ -140,6 +140,7 @@ def fetch_snowline_data(rgi_no: str):
     response.raise_for_status()
     with zipfile.ZipFile(io.BytesIO(response.content)) as gzf:
         glac_csvs = gzf.namelist()
+        st.write(glac_csvs)
 
         sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
         me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
@@ -188,7 +189,6 @@ else:
     # Convert RGI ID → RGI number (your convention: 01.xxxxx)
     st.write(f"### Data for RGI v7: {rgi_no}")
     sl_csvs, me_csvs, db_csvs, hyps_csvs = fetch_snowline_data(rgi_no)
-    st.write(sl_csvs)
 
     if sl_csvs is None:
         st.error("No snowline data found for this glacier.")
