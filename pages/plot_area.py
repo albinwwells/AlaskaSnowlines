@@ -170,7 +170,8 @@ default_start = datetime.date(2017, 1, 1)
 default_end = datetime.date(2025, 1, 1)
 date_range = st.slider("Select plot date range:", min_value=datetime.date(2016, 1, 1), max_value=datetime.date(2025, 1, 1),
                        value=(default_start, default_end), format="YYYY-MM-DD")
-date_start, date_end = date_range
+date_start, date_end = date_range[0].strftime("%Y-%m-%d"), date_range[1].strftime("%Y-%m-%d")
+
 
 # plot data
 rgi_no = rgi_no_man if rgi_no_man is not None else rgi_no_map
