@@ -84,7 +84,11 @@ def fetch_snowline_data(rgi_no: str):
         rgi_index = json.load(f)
     
     rgi_key = (rgi_no + ".zip").strip()
-    zip_name = rgi_index[rgi_key]
+    try:
+        zip_name = rgi_index[rgi_key]
+    except:
+        st.error(f"No data found for gacier {rgi_no}.")
+        sys.exit()
     zip_url = f"https://zenodo.org/records/16961713/files/{zip_name}?download=1"
     
     # Download the outer zip
