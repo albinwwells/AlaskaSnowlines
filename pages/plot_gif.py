@@ -91,6 +91,6 @@ else:
                 with zf.open(fname) as f:
                     html_content = f.read().decode()
                 st.write('pathrow: '+ fname.split(rgi_no+"_")[1].split("_animation")[0])
-                st.components.v1.html(html_content, height=800, scrolling=True)
+                st.components.v1.html(html_content, height=800, scrolling=False)
         else:
             st.error(f"No animation available for {rgi_no} Glacier.")
