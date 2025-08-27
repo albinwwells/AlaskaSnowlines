@@ -193,9 +193,9 @@ else:
                 glac_binned_data = np.array(db_df.to_numpy())
             
                 dates_per = np.array(me_df.index.tolist()).astype('datetime64[ns]')
-                me_elev_per = np.array(me_df.iloc[:, 0].tolist())//1e6
+                me_elev_per = np.array(me_df.iloc[:, 0].tolist())/1e6
                 dates_sl_per = np.array(sl_df.index.tolist()).astype('datetime64[ns]')
-                sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())//1e6
+                sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())/1e6
     
                 # ---------------- Plot ----------------
                 fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
