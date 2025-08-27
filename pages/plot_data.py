@@ -82,7 +82,7 @@ def fetch_snowline_data(rgi_no: str):
     response = requests.get(zip_url)
     response.raise_for_status()
 
-    sl_list, me_list, db_list, hyps_list = [], [], [], []
+    sl_list, me_list, db_list, hyps_list, pr_list = [], [], [], [], []
 
     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
         file_name = f"{rgi_no}.zip"
