@@ -3,6 +3,7 @@ import pandas as pd
 import geopandas as gpd
 import folium
 from folium.features import GeoJsonTooltip
+from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 import requests
 import zipfile
@@ -97,21 +98,24 @@ if st.session_state.get("current_page") == "map":
     center = [61.0, -146.0]
 
     m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron", name="Basemap")
-    # folium.TileLayer(
-    #     tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    #     attr="Esri",
-    #     name="Esri Satellite",
-    #     overlay=False,
-    #     control=True
-    # ).add_to(m)
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri",
+        name="Esri Satellite",
+        overlay=False,
+        control=True
+    ).add_to(m)
     
-    with st.spinner("Plotting glaciers..."):
+    with st.spinner("Adding outlines..."):
         # ---------------- Add outlines ----------------
         # folium.GeoJson(
         #     gdf, # outline_gdf
         #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
         # ).add_to(m)  
-    
+        
+    with st.spinner("Plotting glaciers..."):
+        cluster = MarkerCluster().add_to(m)
+        
         # ---------------- Add clickable centroids ----------------
         for _, row in df.iterrows():
             lat, lon = row.get("cenlat"), row.get("cenlon")
@@ -179,7 +183,7 @@ if st.session_state.get("current_page") == "map":
                     fill=True,
                     fill_color="blue",
                     popup=popup
-                ).add_to(m)
+                ).add_to(cluster)
     
         # ---------------- Layers & render ----------------
         folium.LayerControl().add_to(m)
