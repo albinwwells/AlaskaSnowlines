@@ -57,10 +57,10 @@ if st.session_state.get("current_page") == "map":
         gdf = gpd.read_file(gpkg_path)
         return gdf
     
-    # Load glaciers
-    gdf = load_glaciers(ZENODO_URL)
-    gdf = gdf[gdf["area_km2"] > 2].copy()
-    gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
+    # # Load glaciers
+    # gdf = load_glaciers(ZENODO_URL)
+    # gdf = gdf[gdf["area_km2"] > 2].copy()
+    # gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
 
     with st.spinner("Loading possible glaciers..."):
         csv_url = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
@@ -95,11 +95,11 @@ if st.session_state.get("current_page") == "map":
     
     with st.spinner("Plotting glaciers..."):
         # ---------------- Map ----------------
-        bounds = gdf.total_bounds
+        # bounds = gdf.total_bounds
         # center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
         center = [61.0, -146.0]
     
-        m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
+        m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron", name="Basemap")
         folium.TileLayer(
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             attr="Esri",
@@ -115,7 +115,7 @@ if st.session_state.get("current_page") == "map":
         # ).add_to(m)  
     
         # ---------------- Add clickable centroids ----------------
-        for _, row in gdf.iterrows():
+        for _, row in df.iterrows():
             lat, lon = row.get("cenlat"), row.get("cenlon")
             if lat is not None and lon is not None:
                 rgi_no = "01." + row['rgi_id'][-5:]
