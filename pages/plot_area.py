@@ -14,7 +14,7 @@ st.session_state["current_page"] = "plot"
 
 # ---------------- plotting functions ----------------
 def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='Backscatter [dB]', 
-                    ylabel=r'Area [$km^2$]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
+                    ylabel=r'Cumulative area [$km^2$]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
                     bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
     """" Heatmap plotting function """
     fig, ax = plt.subplots(figsize=figsize)
@@ -187,7 +187,6 @@ else:
                 glac_bin_halfsize = glac_bin_sizes[0]/2
                 binned_area = np.array(hyps_df.iloc[:, 0].tolist())
                 set_ymin, set_ymax = 0, np.sum(binned_area)/1e6
-                st.write(set_ymax)
     
                 dates = np.array(db_df.columns.tolist()).astype('datetime64[ns]')
                 glac_binned_data = np.array(db_df.to_numpy())
