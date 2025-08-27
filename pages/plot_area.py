@@ -187,6 +187,7 @@ else:
                 glac_bin_halfsize = glac_bin_sizes[0]/2
                 binned_area = np.array(hyps_df.iloc[:, 0].tolist())
                 set_ymin, set_ymax = 0, np.sum(binned_area)/1e6
+                print(set_ymax)
     
                 dates = np.array(db_df.columns.tolist()).astype('datetime64[ns]')
                 glac_binned_data = np.array(db_df.to_numpy())
