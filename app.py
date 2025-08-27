@@ -24,6 +24,44 @@ hide_sidebar_style = """
 """
 st.markdown(hide_sidebar_style, unsafe_allow_html=True)
 
+# ---------------- Navigation links ----------------
+st.markdown(
+    """
+    <div style="margin-bottom:15px;">
+        <a href="https://alaskasnowlines.streamlit.app/plot_elev" target="_blank" style="
+            display:inline-block;
+            margin-right:5px;
+            padding:6px 12px;
+            background:#007BFF;
+            color:white;
+            text-decoration:none;
+            border-radius:4px;">
+            Heatmap plots (elevation bins)
+        </a>
+        <a href="https://alaskasnowlines.streamlit.app/plot_area" target="_blank" style="
+            display:inline-block;
+            margin-right:5px;
+            padding:6px 12px;
+            background:#28A745;
+            color:white;
+            text-decoration:none;
+            border-radius:4px;">
+            Heatmap plots (area bins)
+        </a>
+        <a href="https://alaskasnowlines.streamlit.app/plot_gif" target="_blank" style="
+            display:inline-block;
+            padding:6px 12px;
+            background:#FFC107;
+            color:white;
+            text-decoration:none;
+            border-radius:4px;">
+            Glacier animations
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 st.session_state["current_page"] = "map"
 if st.session_state.get("current_page") == "map":    
     # ---------------- Import shapefiles ----------------
