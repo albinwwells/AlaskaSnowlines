@@ -62,6 +62,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.write(f"### Alaska Snowlines")
 st.session_state["current_page"] = "map"
 if st.session_state.get("current_page") == "map":    
     # ---------------- Import shapefiles ----------------
