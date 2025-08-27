@@ -109,8 +109,8 @@ rgi_no = query_params.get("rgi_no", None)
 
 # Allow manual input
 manual_input = st.text_input("Enter a glacier name or RGI number:")
-rgi_no = None  # always start fresh for each rerun
 if manual_input and gdf is not None:
+    rgi_no = None
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
         gdf["rgi_id"].str.contains(manual_input, case=False, na=False) |
@@ -138,7 +138,7 @@ if manual_input and gdf is not None:
           
 if rgi_no is None:
     # st.warning("No glacier selected. Go back to the map and click a glacier.")
-    st.page_link("app.py", label="No glacier selected. Go back to the map and click a glacier.")
+    st.page_link("app.py", label="No glacier selected. Go back to the map selection or enter a glacier above.")
 else:
     # Convert RGI ID → RGI number (your convention: 01.xxxxx)
     st.write(f"### Data for RGI v7: {rgi_no}")
