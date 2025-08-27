@@ -90,6 +90,8 @@ if st.session_state.get("current_page") == "map":
                 glac_gdf = gdf[gdf['rgi_id'] == row['rgi_id']]
                 plot_url1 = f"https://alaskasnowlines.streamlit.app/plot_elev?rgi_no={rgi_no}"
                 plot_url2 = f"https://alaskasnowlines.streamlit.app/plot_area?rgi_no={rgi_no}"
+                glac_name_short = row['glac_name'].split(' Glacier')[0]
+                plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif?name={glac_name_short}"
                 
                 popup_html = f"""
                 <b>RGI ID:</b> {row['rgi_id']}<br>
@@ -117,6 +119,17 @@ if st.session_state.get("current_page") == "map":
                     text-decoration:none;
                     border-radius:4px;">
                     Plot data (area bins)
+                </a>
+                <br>
+                <a href="{plot_url3}" target="_blank" style="
+                    display:inline-block;
+                    margin-top:5px;
+                    padding:4px 8px;
+                    background:#007BFF;
+                    color:white;
+                    text-decoration:none;
+                    border-radius:4px;">
+                    Animate data
                 </a>
                 """
                 popup = folium.Popup(popup_html, max_width=500)
