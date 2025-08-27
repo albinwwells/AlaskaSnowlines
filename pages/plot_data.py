@@ -110,7 +110,7 @@ rgi_no = query_params.get("rgi_no", None)
 # Allow manual input
 manual_input = st.text_input("Enter a glacier name or RGI number:", value="")
 
-if manual_input is not None:
+if manual_input and gdf is not None:
     rgi_no = None
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
@@ -122,7 +122,6 @@ if manual_input is not None:
         if len(matches) == 1:
             # Single match → use directly
             rgi_id = matches.iloc[0]["rgi_id"]
-            st.success(f"Matched glacier: {rgi_id} (Name: {matches.iloc[0]['glac_name']})")
         else:
             # Multiple matches → show a selectbox popup
             st.info(f"Found {len(matches)} possible matches. Please choose one:")
