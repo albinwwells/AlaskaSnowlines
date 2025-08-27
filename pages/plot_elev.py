@@ -120,25 +120,33 @@ def fetch_snowline_data(rgi_no: str):
 
     return sl_list, me_list, db_list, hyps_list, pr_list
 
-@st.cache_data(show_spinner="Downloading data...")
+@st.cache_data(show_spinner="Accessing data downloading options...")
 def download_data(rgi_no: str):
-    """Fetch snowline and melt extent CSVs for a given glacier number."""
+    """Fetch only the inner rgi_no.zip from the outer ZIP on Zenodo."""
+    # Load JSON mapping
     json_path = os.path.join("data", "rgi_data_links.json")
     with open(json_path, "r") as f:
         rgi_index = json.load(f)
     
     rgi_key = (rgi_no + ".zip").strip()
-    try:
-        zip_name = rgi_index[rgi_key]
-    except:
-        st.error(f"No data found for gacier {rgi_no}.")
+    zip_name = rgi_index.get(rgi_key)
+    if zip_name is None:
+        st.error(f"No data found for glacier {rgi_no}.")
         sys.exit()
+
+    # Download the outer ZIP
     zip_url = f"https://zenodo.org/records/16961713/files/{zip_name}?download=1"
-    
-    # Download the outer zip
     response = requests.get(zip_url)
     response.raise_for_status()
-    return response.content
+
+    # Extract the inner rgi_no.zip from the outer ZIP
+    with zipfile.ZipFile(io.BytesIO(response.content)) as outer_zip:
+        if f"{rgi_no}.zip" not in outer_zip.namelist():
+            st.error(f"No inner ZIP for glacier {rgi_no} found in outer ZIP.")
+            return None
+        with outer_zip.open(f"{rgi_no}.zip") as inner_zip_file:
+            inner_zip_bytes = inner_zip_file.read()  # read inner ZIP bytes
+    return inner_zip_bytes
     
 # ---------------- Main page ----------------
 gdf = st.session_state.get("gdf", None)
