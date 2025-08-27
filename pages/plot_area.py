@@ -76,14 +76,14 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
 @st.cache_data(show_spinner="Fetching glacier data...")
 def fetch_snowline_data(rgi_no: str):
     """Fetch snowline and melt extent CSVs for a given glacier number."""
-    json_url = "https://zenodo.org/records/16959278/files/rgi_data_links.json?download=1"
+    json_url = "https://zenodo.org/records/16961713/files/rgi_data_links.json?download=1"
     response = requests.get(json_url)
     response.raise_for_status()
     rgi_index = response.json()  # dictionary: rgi_no to zip URL
     
     rgi_key = (rgi_no + ".zip").strip()
     zip_name = rgi_index[rgi_key]
-    zip_url = f"https://zenodo.org/records/16959278/files/{zip_name}?download=1"
+    zip_url = f"https://zenodo.org/records/16961713/files/{zip_name}?download=1"
     
     # Download the outer zip
     response = requests.get(zip_url)
@@ -121,7 +121,7 @@ manual_input = st.text_input("Enter a glacier name or RGI number:")
 if manual_input is not None:
     if gdf is None:
         with st.spinner("Loading possible glaciers..."):
-            ZENODO_URL = "https://zenodo.org/records/16959278/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
+            ZENODO_URL = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
             def load_glaciers(url):
                 # Persistent cache folder
                 cache_dir = "/tmp/alaska_glaciers"
