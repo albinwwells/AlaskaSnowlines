@@ -72,8 +72,6 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
 
     return fig
 
-st.set_page_config(layout="wide", page_title="Snowline Plot")
-
 # ---------------- Fetch glacier snowline + melt CSVs ----------------
 @st.cache_data(show_spinner="Fetching glacier data...")
 def fetch_snowline_data(rgi_no: str):
