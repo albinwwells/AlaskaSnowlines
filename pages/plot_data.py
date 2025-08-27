@@ -149,7 +149,6 @@ else:
         st.error("No snowline data found for this glacier.")
     else:
         for sl_df, me_df, db_df, hyps_df, pr in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs, prs):
-            st.write(db_df)
             st.write(hyps_df)
             
             sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0, parse_dates=[0], 
