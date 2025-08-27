@@ -108,10 +108,10 @@ if st.session_state.get("current_page") == "map":
     
     with st.spinner("Adding outlines..."):
         # ---------------- Add outlines ----------------
-        # folium.GeoJson(
-        #     gdf, # outline_gdf
-        #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
-        # ).add_to(m)  
+        folium.GeoJson(
+            gdf, # outline_gdf
+            style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
+        ).add_to(m)  
         
     with st.spinner("Plotting glaciers..."):
         cluster = MarkerCluster().add_to(m)
