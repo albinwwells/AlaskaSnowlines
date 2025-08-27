@@ -170,7 +170,7 @@ else:
             # ---------------- Plot ----------------
             fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
                                   binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
-                                  glacno=rgi_no, title_info=f"(pathrow: {pr})", figsize=(12, 4), 
+                                  glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
                                   line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
                                              (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
             st.pyplot(fig)
