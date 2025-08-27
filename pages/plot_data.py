@@ -110,6 +110,7 @@ rgi_no_man = None
 
 # Allow manual input
 manual_input = st.text_input("Enter a glacier name or RGI number:")
+st.write('yes')
 if manual_input and gdf is not None:
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
