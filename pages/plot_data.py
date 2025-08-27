@@ -111,6 +111,7 @@ rgi_no = query_params.get("rgi_no", None)
 manual_input = st.text_input("Enter a glacier name or RGI number:", value="")
 
 if manual_input and gdf is not None:
+    st.write('here')
     rgi_no = None
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
@@ -148,10 +149,14 @@ else:
         st.error("No snowline data found for this glacier.")
     else:
         for sl_df, me_df, db_df, hyps_df, pr in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs, prs):
-            sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0, parse_dates=True)
-            me_df = pd.read_csv(io.StringIO(me_df), index_col=0, parse_dates=True)
-            db_df = pd.read_csv(io.StringIO(db_df), index_col=0, parse_dates=True)
-            hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0, parse_dates=True)
+            sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0, parse_dates=[0], 
+                                date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
+            me_df = pd.read_csv(io.StringIO(me_df), index_col=0, pparse_dates=[0],
+                                date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
+            db_df = pd.read_csv(io.StringIO(db_df), index_col=0, parse_dates=[0],
+                                date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
+            hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0, parse_dates=[0],
+                                  date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
             
             glac_zbins_center = np.array(hyps_df.index.tolist())
             glac_bin_sizes = np.diff(glac_zbins_center)
