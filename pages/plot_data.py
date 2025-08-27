@@ -118,36 +118,66 @@ st.set_page_config(layout="wide", page_title="Snowline Plot")
 
 # ---------------- Fetch glacier snowline + melt CSVs ----------------
 @st.cache_data(show_spinner="Fetching glacier data...")
-def fetch_snowline_data(rgi_no: str):
-    """Fetch snowline and melt extent CSVs from Zenodo for a given glacier number."""
-    json_url = "https://zenodo.org/records/16956246/files/rgi_data_links.json?download=1"
-    response = requests.get(json_url)
-    response.raise_for_status()
-    rgi_index = response.json()  # dictionary: rgi_no to zip URL
-    rgi_key = (rgi_no + ".zip").strip()
-
-    # Get the URL for the specific glacier
-    try:
-        zip_name = rgi_index[rgi_key]
-    except KeyError:
-        st.write(f"Key not found: '{rgi_key}'")
-        return None, None, None, None, None
-        
+def fetch_snowline_data(zip_name: str):
+    """Fetch snowline/melt CSVs for a given glacier zip_name from Zenodo."""
     zip_url = f"https://zenodo.org/records/16956246/files/{zip_name}?download=1"
-
-    # Download the zip
+    
+    # Download the outer zip
     response = requests.get(zip_url)
     response.raise_for_status()
-    st.write(zip_url)
-    with zipfile.ZipFile(io.BytesIO(response.content)) as gzf:
-        glac_csvs = gzf.namelist()
-        st.write(glac_csvs)
 
-        sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
-        me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
-        db_csvs = [f.replace("snowline_elev_percentile", "db_bin_mean") for f in sl_csvs]
-        hyps_csvs = [f.replace("snowline_elev_percentile", "hypsometry") for f in sl_csvs]
-        return sl_csvs, me_csvs, db_csvs, hyps_csvs
+    with zipfile.ZipFile(io.BytesIO(response.content)) as outer_zip:
+        glac_zips = outer_zip.namelist()
+        st.write("Glacier zips inside outer zip:", glac_zips)
+
+        # Assume the zip_name is also the inner zip we want (rgi_no.zip)
+        rgi_no_inner = zip_name  # e.g., "01.05299.zip"
+        if rgi_no_inner in glac_zips:
+            with outer_zip.open(rgi_no_inner) as inner_zip_bytes:
+                with zipfile.ZipFile(inner_zip_bytes) as inner_zip:
+                    glac_csvs = inner_zip.namelist()
+                    st.write("CSV files inside glacier zip:", glac_csvs)
+
+                    # Filter CSV types
+                    sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
+                    me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
+                    db_csvs = [f.replace("snowline_elev_percentile", "db_bin_mean") for f in sl_csvs]
+                    hyps_csvs = [f.replace("snowline_elev_percentile", "hypsometry") for f in sl_csvs]
+
+                    return sl_csvs, me_csvs, db_csvs, hyps_csvs, inner_zip
+        else:
+            st.warning(f"{rgi_no_inner} not found in outer zip.")
+            return None, None, None, None, None
+            
+# def fetch_snowline_data(rgi_no: str):
+#     """Fetch snowline and melt extent CSVs from Zenodo for a given glacier number."""
+#     json_url = "https://zenodo.org/records/16956246/files/rgi_data_links.json?download=1"
+#     response = requests.get(json_url)
+#     response.raise_for_status()
+#     rgi_index = response.json()  # dictionary: rgi_no to zip URL
+#     rgi_key = (rgi_no + ".zip").strip()
+
+#     # Get the URL for the specific glacier
+#     try:
+#         zip_name = rgi_index[rgi_key]
+#     except KeyError:
+#         st.write(f"Key not found: '{rgi_key}'")
+#         return None, None, None, None, None
+        
+#     zip_url = f"https://zenodo.org/records/16956246/files/{zip_name}?download=1"
+
+#     # Download the zip
+#     response = requests.get(zip_url)
+#     response.raise_for_status()
+#     with zipfile.ZipFile(io.BytesIO(response.content)) as gzf:
+#         glac_csvs = gzf.namelist()
+#         st.write(glac_csvs)
+
+#         sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
+#         me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
+#         db_csvs = [f.replace("snowline_elev_percentile", "db_bin_mean") for f in sl_csvs]
+#         hyps_csvs = [f.replace("snowline_elev_percentile", "hypsometry") for f in sl_csvs]
+#         return sl_csvs, me_csvs, db_csvs, hyps_csvs
 
 
 # ---------------- Main page ----------------
