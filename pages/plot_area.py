@@ -125,6 +125,7 @@ if manual_input is not None:
     if gdf is None:
         with st.spinner("Loading possible glaciers..."):
             ZENODO_URL = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
+            @st.cache_data
             def load_glaciers(url):
                 # Persistent cache folder
                 cache_dir = "/tmp/alaska_glaciers"
