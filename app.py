@@ -28,7 +28,7 @@ st.markdown(hide_sidebar_style, unsafe_allow_html=True)
 st.session_state["current_page"] = "map"
 if st.session_state.get("current_page") == "map":    
     # ---------------- Import shapefiles ----------------
-    ZENODO_URL = "https://zenodo.org/records/16956246/files/RGI2000-v7.0-G-01_alaska_2km2_reduc.gpkg.zip?download=1"
+    ZENODO_URL = "https://zenodo.org/records/16959278/files/RGI2000-v7.0-G-01_alaska_2km2_reduc.gpkg.zip?download=1"
     
     @st.cache_data(show_spinner="Loading glacier outlines...")
     def load_glaciers(url):
