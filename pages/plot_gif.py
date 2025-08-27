@@ -35,7 +35,7 @@ if manual_input is not None:
                 return gdf
         
         # Load glaciers
-        csv_path = os.path.join("data", "RGI2000-v7.0-G-01_alaska.csv")
+        csv_path = os.path.join("data", "RGI2000-v7.0-G-01_alaska_2km2.csv")
         gdf = load_glaciers(csv_path)
         gdf = gdf[gdf["area_km2"] > 2].copy()
         gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
