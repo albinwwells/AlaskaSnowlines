@@ -126,28 +126,27 @@ def fetch_snowline_data(zip_name: str):
     response = requests.get(zip_url)
     response.raise_for_status()
 
+    
     with zipfile.ZipFile(io.BytesIO(response.content)) as outer_zip:
-        glac_zips = outer_zip.namelist()
-        st.write("Glacier zips inside outer zip:", glac_zips)
+        # 2. Find the inner ZIP for this glacier
+        inner_zip_name = f"{rgi_no}.zip"
+        if inner_zip_name not in outer_zip.namelist():
+            raise ValueError(f"{inner_zip_name} not found in outer ZIP")
+    
+        # 3. Open inner ZIP in memory
+        with outer_zip.open(inner_zip_name) as inner_zip_file:
+            with zipfile.ZipFile(inner_zip_file) as inner_zip:
+                # 4. List CSVs inside the inner ZIP
+                glac_csvs = inner_zip.namelist()
+                st.write("CSV files inside glacier zip:", glac_csvs)
 
-        # Assume the zip_name is also the inner zip we want (rgi_no.zip)
-        rgi_no_inner = zip_name  # e.g., "01.05299.zip"
-        if rgi_no_inner in glac_zips:
-            with outer_zip.open(rgi_no_inner) as inner_zip_bytes:
-                with zipfile.ZipFile(inner_zip_bytes) as inner_zip:
-                    glac_csvs = inner_zip.namelist()
-                    st.write("CSV files inside glacier zip:", glac_csvs)
+                # Filter CSV types
+                sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
+                me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
+                db_csvs = [f.replace("snowline_elev_percentile", "db_bin_mean") for f in sl_csvs]
+                hyps_csvs = [f.replace("snowline_elev_percentile", "hypsometry") for f in sl_csvs]
 
-                    # Filter CSV types
-                    sl_csvs = [f for f in glac_csvs if "snowline_elev_percentile" in f and "eos_corr" not in f and "eabin" not in f]
-                    me_csvs = [f.replace("snowline", "melt_extent") for f in sl_csvs]
-                    db_csvs = [f.replace("snowline_elev_percentile", "db_bin_mean") for f in sl_csvs]
-                    hyps_csvs = [f.replace("snowline_elev_percentile", "hypsometry") for f in sl_csvs]
-
-                    return sl_csvs, me_csvs, db_csvs, hyps_csvs, inner_zip
-        else:
-            st.warning(f"{rgi_no_inner} not found in outer zip.")
-            return None, None, None, None, None
+                return sl_csvs, me_csvs, db_csvs, hyps_csvs, inner_zip
             
 # def fetch_snowline_data(rgi_no: str):
 #     """Fetch snowline and melt extent CSVs from Zenodo for a given glacier number."""
