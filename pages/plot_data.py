@@ -150,12 +150,12 @@ else:
     else:
         for sl_df, me_df, db_df, hyps_df, pr in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs, prs):
             
-            sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0, parse_dates=[0], 
-                                date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
-            me_df = pd.read_csv(io.StringIO(me_df), index_col=0, parse_dates=[0],
-                                date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
-            db_df = pd.read_csv(io.StringIO(db_df), index_col=0, parse_dates=[0],
-                                date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
+            sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0)
+            sl_df.index = pd.to_datetime(sl_df.index, format='%Y-%m-%d')
+            me_df = pd.read_csv(io.StringIO(me_df), index_col=0)
+            me_df.index = pd.to_datetime(me_df.index, format='%Y-%m-%d')
+            db_df = pd.read_csv(io.StringIO(db_df), index_col=0)
+            db_df.index = pd.to_datetime(db_df.index, format='%Y-%m-%d')
             hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
             
             glac_zbins_center = np.array(hyps_df.index.tolist())
