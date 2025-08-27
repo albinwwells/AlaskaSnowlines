@@ -158,7 +158,8 @@ if manual_input is not None:
             )
         rgi_no_man = "01." + selected[-5:]
     else:
-        st.error("No matching glacier found.")
+        if matches.empty:
+            st.error("No matching glacier found.")
           
 rgi_no = rgi_no_man if rgi_no_man is not None else rgi_no_map
 if rgi_no is None:
