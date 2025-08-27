@@ -198,10 +198,10 @@ if st.session_state.get("current_page") == "map":
                     # Large glaciers added directly to the map
                     folium.CircleMarker(
                         location=[lat, lon],
-                        radius=4,
-                        color="red",
+                        radius=2,
+                        color="blue",
                         fill=True,
-                        fill_color="red",
+                        fill_color="blue",
                         popup=popup
                     ).add_to(m)
             
