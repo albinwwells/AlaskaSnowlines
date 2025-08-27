@@ -63,8 +63,8 @@ if st.session_state.get("current_page") == "map":
     gdf = gdf[gdf["area_km2"] > 2].copy()
     gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
 
-    @st.cache_data(show_spinner="Loading possible glaciers...")
     csv_url = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
+    @st.cache_data(show_spinner="Loading possible glaciers...")
     def load_csv(url):
         # Persistent cache folder
         cache_dir = "/tmp/alaska_glaciers"
