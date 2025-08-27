@@ -144,7 +144,7 @@ if manual_input is not None:
         gdf["glac_name"].str.contains(manual_input, case=False, na=False)
     ]
 
-    if not matches.empty:
+    if not matches.empty and len(matches) < 2000:
         if len(matches) == 1:
             # Single match → use directly
             selected = matches.iloc[0]["rgi_id"]
