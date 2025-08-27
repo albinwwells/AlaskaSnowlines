@@ -105,7 +105,7 @@ if st.session_state.get("current_page") == "map":
     ).add_to(m)
     
     @st.cache_resource
-    def get_outline_geojson(gdf):
+    def get_outline_geojson(_gdf):
         return gdf.to_json()
     
     with st.spinner("Adding outlines..."):
