@@ -4,7 +4,7 @@ import numpy as np
 import json
 import datetime
 import threading
-import requests, zipfile, io, os
+import requests, zipfile, io, os, sys
 import matplotlib.pyplot as plt
 
 st.set_page_config(
@@ -93,6 +93,7 @@ def fetch_snowline_data(rgi_no: str):
         zip_name = rgi_index[rgi_key]
     except:
         st.error(f"No data found for gacier {rgi_no}.")
+        sys.exit()
     zip_url = f"https://zenodo.org/records/16961713/files/{zip_name}?download=1"
     
     # Download the outer zip
