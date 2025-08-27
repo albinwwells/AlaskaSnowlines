@@ -130,15 +130,7 @@ if gdf is None:
             # Download ZIP
             response = requests.get(url)
             response.raise_for_status()
-            with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-                csv_name = [f for f in zf.namelist() if f.endswith(".csv")][0]
-                # Extract GPKG to cache
-                zf.extract(csv_name, cache_dir)
-                extracted_path = os.path.join(cache_dir, csv_name)
-                # Rename to standard path
-                os.rename(extracted_path, csv_path)
-        
-            gdf = gpd.read_file(csv_path)
+            gdf = pd.read_csv(StringIO(response.text))
             return gdf
     
         # Load glaciers
