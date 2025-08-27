@@ -150,7 +150,12 @@ def fetch_snowline_data(rgi_no: str):
                         db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
                         hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
 
-    return sl_list, me_list, db_list, hyps_list
+                        sl_dfs = [pd.read_csv(zf.open(sl_csv), index_col=0) for sl_csv in sl_list]
+                        me_dfs = [pd.read_csv(zf.open(me_csv), index_col=0) for me_csv in me_list]
+                        db_dfs = [pd.read_csv(zf.open(db_csv), index_col=0) for db_csv in dp_list]
+                        hyps_dfs = [pd.read_csv(zf.open(hyps_csv), index_col=0) for hyps_csv in hyps_list]
+
+    return sl_dfs, me_dfs, db_dfs, hyps_dfs
             
 # def fetch_snowline_data(rgi_no: str):
 #     """Fetch snowline and melt extent CSVs from Zenodo for a given glacier number."""
@@ -222,39 +227,32 @@ if rgi_no is None:
 else:
     # Convert RGI ID → RGI number (your convention: 01.xxxxx)
     st.write(f"### Data for RGI v7: {rgi_no}")
-    sl_csvs, me_csvs, db_csvs, hyps_csvs = fetch_snowline_data(rgi_no)
+    sl_dfs, me_dfs, db_dfs, hyps_dfs = fetch_snowline_data(rgi_no)
 
     if sl_csvs is None:
         st.error("No snowline data found for this glacier.")
     else:
-        for sl_csv, me_csv, db_csv, hyps_csv in zip(sl_csvs, me_csvs, db_csvs, hyps_csvs):
-            with gzf.open(sl_csv) as f_sl, gzf.open(me_csv) as f_me:
-                sl_df = pd.read_csv(f_sl, index_col=0)
-                me_df = pd.read_csv(f_me, index_col=0)
+        for sl_df, me_df, db_df, hyps_df in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs):
+            glac_zbins_center = np.array(hyps_df.index.tolist())
+            glac_bin_sizes = np.diff(glac_zbins_center)
+            glac_bin_halfsize = glac_bin_sizes[0]/2
+            binned_area = np.array(hyps_df.iloc[:, 0].tolist())
+            set_ymin, set_ymax = glac_zbins_center[0]-glac_bin_halfsize, glac_zbins_center[-1]+glac_bin_halfsize
 
-                # Extract hypsometry and other necessary arrays
-                hypsometry_df = pd.read_csv(hyps_csv, index_col=0) # load the hypsometry file (one per glacier)
-                glac_zbins_center = np.array(hypsometry_df.index.tolist())
-                glac_bin_sizes = np.diff(glac_zbins_center)
-                glac_bin_halfsize = glac_bin_sizes[0]/2
-                binned_area = np.array(hypsometry_df.iloc[:, 0].tolist())
-                set_ymin, set_ymax = glac_zbins_center[0]-glac_bin_halfsize, glac_zbins_center[-1]+glac_bin_halfsize
-    
-                db_bin_mean_df = pd.read_csv(db_csv, index_col=0)
-                dates = np.array(db_bin_mean_df.columns.tolist()).astype('datetime64[ns]')
-                glac_binned_data = np.array(db_bin_mean_df.to_numpy())
-            
-                dates_per = np.array(me_df.index.tolist()).astype('datetime64[ns]')
-                me_elev_per = np.array(me_df.iloc[:, 0].tolist())
-                dates_sl_per = np.array(sl_df.index.tolist()).astype('datetime64[ns]')
-                sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())
-    
-                # ---------------- Plot ----------------
-                st.write(f"### Plot for {sl_csv}")
-                fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
-                                      binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
-                                      glacno=selected_id, figsize=(12, 4), 
-                                      line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
-                                                 (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
-                st.pyplot(fig)
+            dates = np.array(db_df.columns.tolist()).astype('datetime64[ns]')
+            glac_binned_data = np.array(db_df.to_numpy())
+        
+            dates_per = np.array(me_df.index.tolist()).astype('datetime64[ns]')
+            me_elev_per = np.array(me_df.iloc[:, 0].tolist())
+            dates_sl_per = np.array(sl_df.index.tolist()).astype('datetime64[ns]')
+            sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())
+
+            # ---------------- Plot ----------------
+            st.write(f"### Plot for {sl_csv}")
+            fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
+                                  binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
+                                  glacno=selected_id, figsize=(12, 4), 
+                                  line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
+                                             (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+            st.pyplot(fig)
 
