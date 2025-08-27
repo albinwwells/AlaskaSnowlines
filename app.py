@@ -100,12 +100,19 @@ if st.session_state.get("current_page") == "map":
         center = [61.0, -146.0]
     
         m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
+        folium.TileLayer(
+            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            attr="Esri",
+            name="Esri Satellite",
+            overlay=False,
+            control=True
+        ).add_to(m)
     
         # ---------------- Add outlines ----------------
-        folium.GeoJson(
-            gdf, # outline_gdf
-            style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
-        ).add_to(m)  
+        # folium.GeoJson(
+        #     gdf, # outline_gdf
+        #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
+        # ).add_to(m)  
     
         # ---------------- Add clickable centroids ----------------
         for _, row in gdf.iterrows():
