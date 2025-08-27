@@ -6,7 +6,7 @@ import requests, zipfile, io, os
 import matplotlib.pyplot as plt
 
 st.set_page_config(
-    page_title="Plot (equal elevation bins)",
+    page_title="Plot (equal area bins)",
     layout="wide",         # optional: wide layout
     initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
 )
@@ -14,7 +14,7 @@ st.session_state["current_page"] = "plot"
 
 # ---------------- plotting functions ----------------
 def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='Backscatter [dB]', 
-                    ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
+                    ylabel=r'Area [$km^2$]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
                     bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
     """" Heatmap plotting function """
     fig, ax = plt.subplots(figsize=figsize)
@@ -93,12 +93,12 @@ def fetch_snowline_data(rgi_no: str):
         with zf.open(file_name) as inner_zip_file:
             with zipfile.ZipFile(inner_zip_file) as gzf:
                 for fname in gzf.namelist():
-                    if "snowline_elev_percentile" in fname and "eos_corr" not in fname and "eabin" not in fname:
+                    if "snowline_elev_percentile" in fname and "eos_corr" not in fname and "eabin" in fname:
                         sl_list.append(gzf.read(fname).decode())
                         me_list.append(gzf.read(fname.replace("snowline", "melt_extent")).decode())
                         db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
                         hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
-                        pr_list.append(fname.split("_snowline_elev_percentile_")[-1][:-4])
+                        pr_list.append(fname.split("_snowline_elev_percentile_")[-1][:-10])
 
     return sl_list, me_list, db_list, hyps_list, pr_list
 
