@@ -69,14 +69,14 @@ st.set_page_config(layout="wide", page_title="Snowline Plot")
 @st.cache_data(show_spinner="Fetching glacier data...")
 def fetch_snowline_data(rgi_no: str):
     """Fetch snowline and melt extent CSVs for a given glacier number."""
-    json_url = "https://zenodo.org/records/16956246/files/rgi_data_links.json?download=1"
+    json_url = "https://zenodo.org/records/16959278/files/rgi_data_links.json?download=1"
     response = requests.get(json_url)
     response.raise_for_status()
     rgi_index = response.json()  # dictionary: rgi_no to zip URL
     
     rgi_key = (rgi_no + ".zip").strip()
     zip_name = rgi_index[rgi_key]
-    zip_url = f"https://zenodo.org/records/16956246/files/{zip_name}?download=1"
+    zip_url = f"https://zenodo.org/records/16959278/files/{zip_name}?download=1"
     
     # Download the outer zip
     response = requests.get(zip_url)
@@ -112,6 +112,40 @@ rgi_no_man = None
 manual_input = st.text_input("Enter a glacier name or RGI number:")
 st.write('yes')
 st.write(gdf)
+if gdf is None:
+    with st.spinner("Loading possible glaciers..."):
+        ZENODO_URL = "https://zenodo.org/records/16959278/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
+        def load_glaciers(url):
+            # Persistent cache folder
+            cache_dir = "/tmp/alaska_glaciers"
+            os.makedirs(cache_dir, exist_ok=True)
+        
+            csv_path = os.path.join(cache_dir, "RGI2000-v7.0-G-01_alaska.csv")
+        
+            # If already downloaded, read from cache
+            if os.path.exists(csv_path):
+                gdf = gpd.read_file(csv_path)
+                return gdf
+        
+            # Download ZIP
+            response = requests.get(url)
+            response.raise_for_status()
+            with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+                csv_name = [f for f in zf.namelist() if f.endswith(".csv")][0]
+                # Extract GPKG to cache
+                zf.extract(csv_name, cache_dir)
+                extracted_path = os.path.join(cache_dir, csv_name)
+                # Rename to standard path
+                os.rename(extracted_path, csv_path)
+        
+            gdf = gpd.read_file(csv_path)
+            return gdf
+    
+        # Load glaciers
+        gdf = load_glaciers(ZENODO_URL)
+        gdf = gdf[gdf["area_km2"] > 2].copy()
+        gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
+
 if manual_input and gdf is not None:
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
@@ -148,33 +182,33 @@ else:
         st.error("No snowline data found for this glacier.")
     else:
         for sl_df, me_df, db_df, hyps_df, pr in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs, prs):
+            with st.spinner("Generating plots..."):
+                sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0)
+                sl_df.index = pd.to_datetime(sl_df.index, format='%Y-%m-%d')
+                me_df = pd.read_csv(io.StringIO(me_df), index_col=0)
+                me_df.index = pd.to_datetime(me_df.index, format='%Y-%m-%d')
+                db_df = pd.read_csv(io.StringIO(db_df), index_col=0)
+                hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
+                
+                glac_zbins_center = np.array(hyps_df.index.tolist())
+                glac_bin_sizes = np.diff(glac_zbins_center)
+                glac_bin_halfsize = glac_bin_sizes[0]/2
+                binned_area = np.array(hyps_df.iloc[:, 0].tolist())
+                set_ymin, set_ymax = glac_zbins_center[0]-glac_bin_halfsize, glac_zbins_center[-1]+glac_bin_halfsize
+    
+                dates = np.array(db_df.columns.tolist()).astype('datetime64[ns]')
+                glac_binned_data = np.array(db_df.to_numpy())
             
-            sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0)
-            sl_df.index = pd.to_datetime(sl_df.index, format='%Y-%m-%d')
-            me_df = pd.read_csv(io.StringIO(me_df), index_col=0)
-            me_df.index = pd.to_datetime(me_df.index, format='%Y-%m-%d')
-            db_df = pd.read_csv(io.StringIO(db_df), index_col=0)
-            hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
-            
-            glac_zbins_center = np.array(hyps_df.index.tolist())
-            glac_bin_sizes = np.diff(glac_zbins_center)
-            glac_bin_halfsize = glac_bin_sizes[0]/2
-            binned_area = np.array(hyps_df.iloc[:, 0].tolist())
-            set_ymin, set_ymax = glac_zbins_center[0]-glac_bin_halfsize, glac_zbins_center[-1]+glac_bin_halfsize
-
-            dates = np.array(db_df.columns.tolist()).astype('datetime64[ns]')
-            glac_binned_data = np.array(db_df.to_numpy())
-        
-            dates_per = np.array(me_df.index.tolist()).astype('datetime64[ns]')
-            me_elev_per = np.array(me_df.iloc[:, 0].tolist())
-            dates_sl_per = np.array(sl_df.index.tolist()).astype('datetime64[ns]')
-            sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())
-
-            # ---------------- Plot ----------------
-            fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
-                                  binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
-                                  glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
-                                  line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
-                                             (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
-            st.pyplot(fig)
+                dates_per = np.array(me_df.index.tolist()).astype('datetime64[ns]')
+                me_elev_per = np.array(me_df.iloc[:, 0].tolist())
+                dates_sl_per = np.array(sl_df.index.tolist()).astype('datetime64[ns]')
+                sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())
+    
+                # ---------------- Plot ----------------
+                fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
+                                      binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
+                                      glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
+                                      line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
+                                                 (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+                st.pyplot(fig)
 
