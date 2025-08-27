@@ -149,6 +149,8 @@ def fetch_snowline_data(rgi_no: str):
                         me_list.append(gzf.read(fname.replace("snowline", "melt_extent")).decode())
                         db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
                         hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
+                        st.write('sl_list:',sl_list)
+                        st.write('fname:',fname)
 
                         sl_dfs = [pd.read_csv(zf.open(sl_csv), index_col=0) for sl_csv in sl_list]
                         me_dfs = [pd.read_csv(zf.open(me_csv), index_col=0) for me_csv in me_list]
