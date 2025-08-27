@@ -84,6 +84,7 @@ else:
 
     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
         # Find matching files inside the ZIP
+        st.write(zf.namelist())
         matching_files = [f for f in zf.namelist() if f.startswith(rgi_no) and f.endswith("_animation.html")]
 
         if matching_files:
