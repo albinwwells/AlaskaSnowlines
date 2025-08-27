@@ -120,6 +120,26 @@ def fetch_snowline_data(rgi_no: str):
 
     return sl_list, me_list, db_list, hyps_list, pr_list
 
+@st.cache_data(show_spinner="Downloading data...")
+def download_data(rgi_no: str):
+    """Fetch snowline and melt extent CSVs for a given glacier number."""
+    json_path = os.path.join("data", "rgi_data_links.json")
+    with open(json_path, "r") as f:
+        rgi_index = json.load(f)
+    
+    rgi_key = (rgi_no + ".zip").strip()
+    try:
+        zip_name = rgi_index[rgi_key]
+    except:
+        st.error(f"No data found for gacier {rgi_no}.")
+        sys.exit()
+    zip_url = f"https://zenodo.org/records/16961713/files/{zip_name}?download=1"
+    
+    # Download the outer zip
+    response = requests.get(zip_url)
+    response.raise_for_status()
+    return response.content
+    
 # ---------------- Main page ----------------
 gdf = st.session_state.get("gdf", None)
 query_params = st.query_params
@@ -220,4 +240,12 @@ else:
                                           line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
                                                      (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
                 st.pyplot(fig)
+
+        # download button
+        st.download_button(
+            label="Download raw data files",
+            data=download_data(rgi_no),  # fetch bytes directly here
+            file_name=f"{rgi_no}.zip",
+            mime="application/zip"
+        )
 
