@@ -1,4 +1,4 @@
-import streamlit as st
+vimport streamlit as st
 import pandas as pd
 import geopandas as gpd
 import folium
@@ -88,8 +88,8 @@ if st.session_state.get("current_page") == "map":
             if lat is not None and lon is not None:
                 rgi_no = "01." + row['rgi_id'][-5:]
                 glac_gdf = gdf[gdf['rgi_id'] == row['rgi_id']]
-                # plot_url = f"/?page=plot_data&rgi_no={rgi_no}"
-                plot_url = f"https://alaskasnowlines.streamlit.app/plot_data?rgi_no={rgi_no}"
+                plot_url1 = f"https://alaskasnowlines.streamlit.app/plot_elev?rgi_no={rgi_no}"
+                plot_url2 = f"https://alaskasnowlines.streamlit.app/plot_area?rgi_no={rgi_no}"
                 
                 popup_html = f"""
                 <b>RGI ID:</b> {row['rgi_id']}<br>
@@ -97,7 +97,7 @@ if st.session_state.get("current_page") == "map":
                 <b>Area:</b> {round(row['area_km2'], 1)} km2<br>
                 <b>Min elev:</b> {round(row['zmin_m'])} m<br>
                 <b>Max elev:</b> {round(row['zmax_m'])} m<br>
-                <a href="{plot_url}" target="_blank" style="
+                <a href="{plot_url1}" target="_blank" style="
                     display:inline-block;
                     margin-top:5px;
                     padding:4px 8px;
@@ -105,7 +105,18 @@ if st.session_state.get("current_page") == "map":
                     color:white;
                     text-decoration:none;
                     border-radius:4px;">
-                    Plot snowline data
+                    Plot data (elevation bins)
+                </a>
+                <br>
+                <a href="{plot_url2}" target="_blank" style="
+                    display:inline-block;
+                    margin-top:5px;
+                    padding:4px 8px;
+                    background:#007BFF;
+                    color:white;
+                    text-decoration:none;
+                    border-radius:4px;">
+                    Plot data (area bins)
                 </a>
                 """
                 popup = folium.Popup(popup_html, max_width=500)
