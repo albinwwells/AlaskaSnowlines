@@ -79,10 +79,14 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
 @st.cache_data(show_spinner="Fetching glacier data...")
 def fetch_snowline_data(rgi_no: str):
     """Fetch snowline and melt extent CSVs for a given glacier number."""
-    json_url = "https://zenodo.org/records/16961713/files/rgi_data_links.json?download=1"
-    response = requests.get(json_url)
-    response.raise_for_status()
-    rgi_index = response.json()  # dictionary: rgi_no to zip URL
+    json_path = os.path.join("data", "rgi_data_links.json")
+    with open(json_path, "r") as f:
+        rgi_index = json.load(f)
+        
+    # json_url = "https://zenodo.org/records/16961713/files/rgi_data_links.json?download=1"
+    # response = requests.get(json_url)
+    # response.raise_for_status()
+    # rgi_index = response.json()  # dictionary: rgi_no to zip URL
     
     rgi_key = (rgi_no + ".zip").strip()
     zip_name = rgi_index[rgi_key]
