@@ -93,21 +93,19 @@ if st.session_state.get("current_page") == "map":
     #     outline_gdf = gdf[["geometry"]].copy()
     #     outline_gdf["geometry"] = outline_gdf.geometry.simplify(tolerance=0.001, preserve_topology=True) # simplify to help plotting
     
+    # ---------------- Map ----------------
+    center = [61.0, -146.0]
+
+    m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron", name="Basemap")
+    # folium.TileLayer(
+    #     tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    #     attr="Esri",
+    #     name="Esri Satellite",
+    #     overlay=False,
+    #     control=True
+    # ).add_to(m)
+    
     with st.spinner("Plotting glaciers..."):
-        # ---------------- Map ----------------
-        # bounds = gdf.total_bounds
-        # center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
-        center = [61.0, -146.0]
-    
-        m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron", name="Basemap")
-        folium.TileLayer(
-            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            attr="Esri",
-            name="Esri Satellite",
-            overlay=False,
-            control=True
-        ).add_to(m)
-    
         # ---------------- Add outlines ----------------
         # folium.GeoJson(
         #     gdf, # outline_gdf
