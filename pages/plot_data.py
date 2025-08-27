@@ -118,15 +118,21 @@ st.set_page_config(layout="wide", page_title="Snowline Plot")
 
 # ---------------- Fetch glacier snowline + melt CSVs ----------------
 @st.cache_data(show_spinner="Fetching glacier data...")
-def fetch_snowline_data(zip_name: str):
+def fetch_snowline_data(rgi_no: str):
     """Fetch snowline/melt CSVs for a given glacier zip_name from Zenodo."""
+    json_url = "https://zenodo.org/records/16956246/files/rgi_data_links.json?download=1"
+    response = requests.get(json_url)
+    response.raise_for_status()
+    rgi_index = response.json()  # dictionary: rgi_no to zip URL
+    
+    rgi_key = (rgi_no + ".zip").strip()
+    zip_name = rgi_index[rgi_key]
     zip_url = f"https://zenodo.org/records/16956246/files/{zip_name}?download=1"
     
     # Download the outer zip
     response = requests.get(zip_url)
     response.raise_for_status()
 
-    
     with zipfile.ZipFile(io.BytesIO(response.content)) as outer_zip:
         # 2. Find the inner ZIP for this glacier
         inner_zip_name = f"{rgi_no}.zip"
