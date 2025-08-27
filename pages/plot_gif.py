@@ -1,7 +1,7 @@
 import streamlit as st
 import geopandas as gpd
 import pandas as pd
-import requests, zipfile, io
+import requests, zipfile, io, os
 
 st.set_page_config(
     page_title="Animation",
