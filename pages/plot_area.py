@@ -167,10 +167,10 @@ if manual_input is not None:
 #     df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
 #     return df_filt
 
-default_start = pd.to_datetime("2017-01-01")
-default_end = pd.to_datetime("2025-01-01")
-date_range = st.slider("Plot date range:", min_value=pd.to_datetime("2010-01-01"),
-                       max_value=pd.to_datetime("2030-12-31"), value=(default_start, default_end),format="YYYY-MM-DD")
+default_start = datetime.date(2017, 1, 1)
+default_end = datetime.date(2025, 1, 1)
+date_range = st.slider("Select plot date range:", min_value=datetime.date(2016, 1, 1), max_value=datetime.date(2025, 1, 1),
+                       value=(default_start, default_end), format="YYYY-MM-DD")
 date_start, date_end = date_range
 
 # plot data
