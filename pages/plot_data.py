@@ -138,6 +138,7 @@ def fetch_snowline_data(rgi_no: str):
     # Download the zip
     response = requests.get(zip_url)
     response.raise_for_status()
+    st.write(zip_url)
     with zipfile.ZipFile(io.BytesIO(response.content)) as gzf:
         glac_csvs = gzf.namelist()
         st.write(glac_csvs)
