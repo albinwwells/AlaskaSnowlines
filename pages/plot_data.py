@@ -6,7 +6,7 @@ import requests, zipfile, io, os
 import matplotlib.pyplot as plt
 
 st.set_page_config(
-    page_title="Alaska Snowlines",
+    page_title="Plot (equal elevation bins)",
     layout="wide",         # optional: wide layout
     initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
 )
