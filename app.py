@@ -1,14 +1,12 @@
 import streamlit as st
 import pandas as pd
 import geopandas as gpd
+import json
 import folium
 from folium.features import GeoJsonTooltip
 from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
-import requests
-import zipfile
-import os
-import io
+import requests, zipfile, os, io
 import tempfile
 
 # st.title("Alaska Snowlines")
@@ -106,12 +104,23 @@ if st.session_state.get("current_page") == "map":
         control=True
     ).add_to(m)
     
+    @st.cache_resource
+    def get_outline_geojson(gdf):
+        return gdf.to_json()
+    
     with st.spinner("Adding outlines..."):
-        # ---------------- Add outlines ----------------
+        geojson_data = get_outline_geojson(gdf)
         folium.GeoJson(
-            gdf, # outline_gdf
+            json.loads(geojson_data),
             style_function=lambda x: {"color": "blue", "weight": 0.75, "fillOpacity": 0}
-        ).add_to(m)  
+        ).add_to(m)
+    
+    # with st.spinner("Adding outlines..."):
+    #     # ---------------- Add outlines ----------------
+    #     folium.GeoJson(
+    #         gdf, # outline_gdf
+    #         style_function=lambda x: {"color": "blue", "weight": 0.75, "fillOpacity": 0}
+    #     ).add_to(m)  
         
     with st.spinner("Plotting glaciers..."):
         cluster = MarkerCluster().add_to(m)
