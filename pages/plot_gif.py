@@ -75,22 +75,23 @@ if rgi_no is None:
     st.page_link("app.py", label="No glacier selected. Go back to the map selection or enter a glacier above.")
 else:
     st.write(f"### Animation for {rgi_no} Glacier")
-
-    # Path to your GIF zip file
-    gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
-
-    response = requests.get(gif_zip_fp)
-    response.raise_for_status()
-
-    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-        # Find matching files inside the ZIP
-        matching_files = [f for f in zf.namelist() if f.startswith(f"animations/{rgi_no}") and f.endswith("_animation.html")]
-
-        if matching_files:
-            for fname in matching_files:
-                with zf.open(fname) as f:
-                    html_content = f.read().decode()
-                st.write('pathrow: '+ fname.split(rgi_no+"_")[1].split("_animation")[0])
-                st.components.v1.html(html_content, height=800, scrolling=True)
-        else:
-            st.error(f"No animation available for {rgi_no} Glacier.")
+    
+    with st.spinner("Locating animation data..."):
+        # Path to your GIF zip file
+        gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
+    
+        response = requests.get(gif_zip_fp)
+        response.raise_for_status()
+    
+        with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+            # Find matching files inside the ZIP
+            matching_files = [f for f in zf.namelist() if f.startswith(f"animations/{rgi_no}") and f.endswith("_animation.html")]
+    
+            if matching_files:
+                for fname in matching_files:
+                    with zf.open(fname) as f:
+                        html_content = f.read().decode()
+                    st.write('pathrow: '+ fname.split(rgi_no+"_")[1].split("_animation")[0])
+                    st.components.v1.html(html_content, height=800, scrolling=True)
+            else:
+                st.error(f"No animation available for {rgi_no} Glacier.")
