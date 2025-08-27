@@ -84,15 +84,12 @@ else:
 
     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
         # Find matching files inside the ZIP
-        st.write(zf.namelist())
         matching_files = [f for f in zf.namelist() if f.startswith(f"animations/{rgi_no}") and f.endswith("_animation.html")]
 
         if matching_files:
             for fname in matching_files:
-                st.write(f"Showing {fname}")
-                # Read file directly from ZIP
                 with zf.open(fname) as f:
                     html_content = f.read().decode()
-                st.components.v1.html(html_content, height=500)
+                st.components.v1.html(html_content, height=1000)
         else:
             st.error(f"No animation available for {rgi_no} Glacier.")
