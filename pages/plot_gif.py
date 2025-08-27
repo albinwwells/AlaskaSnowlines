@@ -77,7 +77,7 @@ rgi_no = rgi_no_man if rgi_no_man is not None else rgi_no_map
 if rgi_no is None:
     st.page_link("app.py", label="No glacier selected. Go back to the map selection or enter a glacier above.")
 else:
-    st.write(f"### Visualization for RGI v7: {rgi_no}")
+    st.write(f"### Animation for {rgi_no} Glacier")
 
     # Path to your GIF zip file
     gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
