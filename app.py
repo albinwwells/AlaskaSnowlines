@@ -119,7 +119,7 @@ if st.session_state.get("current_page") == "map":
             lat, lon = row.get("cenlat"), row.get("cenlon")
             if lat is not None and lon is not None:
                 rgi_no = "01." + row['rgi_id'][-5:]
-                glac_gdf = gdf[gdf['rgi_id'] == row['rgi_id']]
+                # glac_gdf = gdf[gdf['rgi_id'] == row['rgi_id']]
                 plot_url1 = f"https://alaskasnowlines.streamlit.app/plot_elev?rgi_no={rgi_no}"
                 plot_url2 = f"https://alaskasnowlines.streamlit.app/plot_area?rgi_no={rgi_no}"
                 try:
