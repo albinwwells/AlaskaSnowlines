@@ -149,7 +149,6 @@ else:
         st.error("No snowline data found for this glacier.")
     else:
         for sl_df, me_df, db_df, hyps_df, pr in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs, prs):
-            st.write(hyps_df)
             
             sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0, parse_dates=[0], 
                                 date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
@@ -157,8 +156,7 @@ else:
                                 date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
             db_df = pd.read_csv(io.StringIO(db_df), index_col=0, parse_dates=[0],
                                 date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
-            hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0, parse_dates=[0],
-                                  date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
+            hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
             
             glac_zbins_center = np.array(hyps_df.index.tolist())
             glac_bin_sizes = np.diff(glac_zbins_center)
