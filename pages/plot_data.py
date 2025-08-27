@@ -224,7 +224,7 @@ else:
     st.write(f"### Data for RGI v7: {rgi_no}")
     sl_dfs, me_dfs, db_dfs, hyps_dfs = fetch_snowline_data(rgi_no)
 
-    if sl_csvs is None:
+    if sl_dfs is None:
         st.error("No snowline data found for this glacier.")
     else:
         for sl_df, me_df, db_df, hyps_df in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs):
