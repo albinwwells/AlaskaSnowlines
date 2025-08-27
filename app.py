@@ -90,8 +90,11 @@ if st.session_state.get("current_page") == "map":
                 glac_gdf = gdf[gdf['rgi_id'] == row['rgi_id']]
                 plot_url1 = f"https://alaskasnowlines.streamlit.app/plot_elev?rgi_no={rgi_no}"
                 plot_url2 = f"https://alaskasnowlines.streamlit.app/plot_area?rgi_no={rgi_no}"
-                glac_name_short = row['glac_name'].split(' Glacier')[0]
-                plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif?name={glac_name_short}"
+                try:
+                    glac_name_short = row['glac_name'].split(' Glacier')[0]
+                    plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif?name={glac_name_short}"
+                except:
+                    plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif"
                 
                 popup_html = f"""
                 <b>RGI ID:</b> {row['rgi_id']}<br>
