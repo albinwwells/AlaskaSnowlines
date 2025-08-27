@@ -248,7 +248,6 @@ else:
             sl_elev_per = np.array(sl_df.iloc[:, 0].tolist())
 
             # ---------------- Plot ----------------
-            st.write(f"### Plot for {sl_csv}")
             fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
                                   binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
                                   glacno=selected_id, figsize=(12, 4), 
