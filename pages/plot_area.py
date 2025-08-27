@@ -11,7 +11,15 @@ st.set_page_config(
     layout="wide",         # optional: wide layout
     initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
 )
-st.session_state["current_page"] = "plot"
+
+hide_sidebar_style = """
+    <style>
+        [data-testid="stSidebar"] {display: none;}
+        [data-testid="stSidebarNav"] {display: none;}
+    </style>
+"""
+st.markdown(hide_sidebar_style, unsafe_allow_html=True)
+st.session_state["current_page"] = "plot_area"
 
 # ---------------- plotting functions ----------------
 def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='Backscatter [dB]', 
