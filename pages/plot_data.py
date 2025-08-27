@@ -109,6 +109,7 @@ rgi_no = query_params.get("rgi_no", None)
 
 # Allow manual input
 manual_input = st.text_input("Enter a glacier name or RGI number:")
+rgi_no = None  # always start fresh for each rerun
 if manual_input and gdf is not None:
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
