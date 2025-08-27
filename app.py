@@ -153,7 +153,7 @@ if st.session_state.get("current_page") == "map":
     
         # ---------------- Layers & render ----------------
         folium.LayerControl().add_to(m)
-        st_folium(m, width=800, height=600)
+        # st_folium(m, width=800, height=600)
     
     folium.LayerControl().add_to(m)
 
