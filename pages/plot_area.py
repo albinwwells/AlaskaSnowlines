@@ -160,12 +160,18 @@ if manual_input is not None:
             st.error("No matching glacier found.")
 
 # ---------------- filter date range ----------------
-date_start = st.text_input("Plot start date (YYYY-MM-DD):", value="2017-01-01")
-date_end = st.text_input("Plot end date (YYYY-MM-DD):", value="2025-01-01")
-def dates_filter_for_plotting(df, date_start='2017-01-01', date_end='2025-01-01'):
-    df.columns = pd.to_datetime(df.columns)
-    df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
-    return df_filt
+# date_start = st.text_input("Plot start date (YYYY-MM-DD):", value="2017-01-01")
+# date_end = st.text_input("Plot end date (YYYY-MM-DD):", value="2025-01-01")
+# def dates_filter_for_plotting(df, date_start='2017-01-01', date_end='2025-01-01'):
+#     df.columns = pd.to_datetime(df.columns)
+#     df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
+#     return df_filt
+
+# default_start = pd.to_datetime("2017-01-01")
+# default_end = pd.to_datetime("2025-01-01")
+date_range = st.slider("Plot date range:", min_value=pd.to_datetime("2010-01-01"),
+                       max_value=pd.to_datetime("2030-12-31"), value=(default_start, default_end),format="YYYY-MM-DD")
+date_start, date_end = date_range
 
 # plot data
 rgi_no = rgi_no_man if rgi_no_man is not None else rgi_no_map
