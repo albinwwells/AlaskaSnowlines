@@ -154,8 +154,7 @@ else:
             sl_df.index = pd.to_datetime(sl_df.index, format='%Y-%m-%d')
             me_df = pd.read_csv(io.StringIO(me_df), index_col=0)
             me_df.index = pd.to_datetime(me_df.index, format='%Y-%m-%d')
-            db_df = pd.read_csv(io.StringIO(db_df), index_col=0)
-            db_df.index = pd.to_datetime(db_df.index, format='%Y-%m-%d')
+            db_df = pd.read_csv(io.StringIO(db_df))
             hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
             
             glac_zbins_center = np.array(hyps_df.index.tolist())
