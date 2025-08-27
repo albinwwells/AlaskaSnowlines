@@ -90,6 +90,6 @@ else:
             for fname in matching_files:
                 with zf.open(fname) as f:
                     html_content = f.read().decode()
-                st.components.v1.html(html_content, height=1000)
+                st.components.v1.html(html_content, height=1000, scrolling=True)
         else:
             st.error(f"No animation available for {rgi_no} Glacier.")
