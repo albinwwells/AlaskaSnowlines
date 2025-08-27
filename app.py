@@ -69,10 +69,10 @@ if st.session_state.get("current_page") == "map":
         m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron")
     
         # ---------------- Add outlines ----------------
-        # folium.GeoJson(
-        #     gdf, # outline_gdf
-        #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
-        # ).add_to(m)
+        folium.GeoJson(
+            gdf, # outline_gdf
+            style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1}
+        ).add_to(m)
     
         # ---------------- Add clickable centroids ----------------
         for _, row in gdf.iterrows():
@@ -102,20 +102,19 @@ if st.session_state.get("current_page") == "map":
                 """
                 popup = folium.Popup(popup_html, max_width=500)
         
-                folium.GeoJson(
-                    glac_gdf,
-                    style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1},
-                    popup=popup
-                ).add_to(m)
-        
-                # folium.CircleMarker(
-                #     location=[lat, lon],
-                #     radius=2,
-                #     color="blue",
-                #     fill=True,
-                #     fill_color="blue",
+                # folium.GeoJson(
+                #     glac_gdf,
+                #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1},
                 #     popup=popup
                 # ).add_to(m)
+                folium.CircleMarker(
+                    location=[lat, lon],
+                    radius=2,
+                    color="blue",
+                    fill=True,
+                    fill_color="blue",
+                    popup=popup
+                ).add_to(m)
     
         # ---------------- Layers & render ----------------
         folium.LayerControl().add_to(m)
