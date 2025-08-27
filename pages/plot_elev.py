@@ -110,8 +110,6 @@ rgi_no_man = None
 
 # Allow manual input
 manual_input = st.text_input("Enter a glacier name or RGI number:")
-st.write('yes')
-st.write(gdf)
 
 if manual_input is not None:
     if gdf is None:
