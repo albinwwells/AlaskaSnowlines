@@ -185,33 +185,15 @@ if st.session_state.get("current_page") == "map":
                 #     style_function=lambda x: {"color": "blue", "weight": 0.5, "fillOpacity": 0.1},
                 #     popup=popup
                 # ).add_to(m)
-                if row['area_km2'] < 50:
-                    folium.CircleMarker(
-                        location=[lat, lon],
-                        radius=2,
-                        color="blue",
-                        fill=True,
-                        fill_color="blue",
-                        popup=popup
-                    ).add_to(cluster)
-                else:
-                    # Large glaciers added directly to the map
-                    folium.CircleMarker(
-                        location=[lat, lon],
-                        radius=2,
-                        color="blue",
-                        fill=True,
-                        fill_color="blue",
-                        popup=popup
-                    ).add_to(m)
             
-                # folium.CircleMarker(
-                #     location=[lat, lon],
-                #     radius=2,
-                #     color="blue",
-                #     fill=True,
-                #     fill_color="blue",
-                #     popup=popup
+                folium.CircleMarker(
+                    location=[lat, lon],
+                    radius=2,
+                    color="blue",
+                    fill=True,
+                    fill_color="blue",
+                    popup=popup
+                ).add_to(m)
                 # ).add_to(cluster)
     
         # ---------------- Layers & render ----------------
