@@ -110,7 +110,7 @@ if st.session_state.get("current_page") == "map":
         # ---------------- Add outlines ----------------
         folium.GeoJson(
             gdf, # outline_gdf
-            style_function=lambda x: {"color": "blue", "weight": 0.6, "fillOpacity": 0.0}
+            style_function=lambda x: {"color": "blue", "weight": 0.75, "fillOpacity": 0}
         ).add_to(m)  
         
     with st.spinner("Plotting glaciers..."):
