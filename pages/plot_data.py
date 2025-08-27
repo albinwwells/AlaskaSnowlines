@@ -149,15 +149,8 @@ def fetch_snowline_data(rgi_no: str):
                         me_list.append(gzf.read(fname.replace("snowline", "melt_extent")).decode())
                         db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
                         hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
-                        st.write('sl_list:',sl_list)
-                        st.write('fname:',fname)
 
-                        sl_dfs = [pd.read_csv(zf.open(sl_csv), index_col=0) for sl_csv in sl_list]
-                        me_dfs = [pd.read_csv(zf.open(me_csv), index_col=0) for me_csv in me_list]
-                        db_dfs = [pd.read_csv(zf.open(db_csv), index_col=0) for db_csv in dp_list]
-                        hyps_dfs = [pd.read_csv(zf.open(hyps_csv), index_col=0) for hyps_csv in hyps_list]
-
-    return sl_dfs, me_dfs, db_dfs, hyps_dfs
+    return sl_list, me_list, db_list, hyps_list
             
 # def fetch_snowline_data(rgi_no: str):
 #     """Fetch snowline and melt extent CSVs from Zenodo for a given glacier number."""
@@ -235,6 +228,11 @@ else:
         st.error("No snowline data found for this glacier.")
     else:
         for sl_df, me_df, db_df, hyps_df in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs):
+            sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0, parse_dates=True)
+            me_df = pd.read_csv(io.StringIO(me_df), index_col=0, parse_dates=True)
+            db_df = pd.read_csv(io.StringIO(db_df), index_col=0, parse_dates=True)
+            hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0, parse_dates=True)
+            
             glac_zbins_center = np.array(hyps_df.index.tolist())
             glac_bin_sizes = np.diff(glac_zbins_center)
             glac_bin_halfsize = glac_bin_sizes[0]/2
