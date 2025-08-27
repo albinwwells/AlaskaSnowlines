@@ -151,7 +151,7 @@ else:
         for sl_df, me_df, db_df, hyps_df, pr in zip(sl_dfs, me_dfs, db_dfs, hyps_dfs, prs):
             sl_df = pd.read_csv(io.StringIO(sl_df), index_col=0, parse_dates=[0], 
                                 date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
-            me_df = pd.read_csv(io.StringIO(me_df), index_col=0, pparse_dates=[0],
+            me_df = pd.read_csv(io.StringIO(me_df), index_col=0, parse_dates=[0],
                                 date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
             db_df = pd.read_csv(io.StringIO(db_df), index_col=0, parse_dates=[0],
                                 date_parser=lambda x: pd.to_datetime(x, format="%Y-%m-%d", errors="coerce"))
