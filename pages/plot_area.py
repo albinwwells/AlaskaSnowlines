@@ -146,16 +146,14 @@ if manual_input is not None:
 
     if not matches.empty and len(matches) < 100:
         if len(matches) == 1:
-            # Single match → use directly
-            selected = matches.iloc[0]["rgi_id"]
+            st.info(f"Found {len(matches)} possible match.")
         else:
-            # Multiple matches → show a selectbox popup
             st.info(f"Found {len(matches)} possible matches. Please choose one:")
-            selected = st.selectbox(
-                "Select a glacier:",
-                matches["rgi_id"],
-                format_func=lambda rid: f"{rid} – {matches.loc[matches['rgi_id']==rid, 'glac_name'].values[0]}"
-            )
+        selected = st.selectbox(
+            "Select glacier:",
+            matches["rgi_id"],
+            format_func=lambda rid: f"{rid} – {matches.loc[matches['rgi_id']==rid, 'glac_name'].values[0]}"
+        )
         rgi_no_man = "01." + selected[-5:]
     else:
         if matches.empty:
