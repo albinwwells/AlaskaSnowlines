@@ -17,6 +17,14 @@ st.set_page_config(
     initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
 )
 
+hide_sidebar_style = """
+    <style>
+        [data-testid="stSidebar"] {display: none;}
+        [data-testid="stSidebarNav"] {display: none;}
+    </style>
+"""
+st.markdown(hide_sidebar_style, unsafe_allow_html=True)
+
 st.session_state["current_page"] = "map"
 if st.session_state.get("current_page") == "map":    
     # ---------------- Import shapefiles ----------------
