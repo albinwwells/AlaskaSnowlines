@@ -13,7 +13,7 @@ st.set_page_config(
 st.session_state["current_page"] = "plot"
 
 # ---------------- plotting functions ----------------
-def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='db', 
+def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='Backscatter [dB]', 
                     ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
                     bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
     """" Heatmap plotting function """
@@ -108,8 +108,9 @@ query_params = st.query_params
 rgi_no = query_params.get("rgi_no", None)
 
 # Allow manual input
-manual_input = st.text_input("Enter a glacier name or RGI number:")
-if manual_input and gdf is not None:
+manual_input = st.text_input("Enter a glacier name or RGI number:", value="")
+
+if manual_input is not None:
     rgi_no = None
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
