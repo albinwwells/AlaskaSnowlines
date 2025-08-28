@@ -155,6 +155,7 @@ if manual_input:
             control=True
         ).add_to(m)
 
+        rgi_no = "01." + glacier['rgi_id'][-5:]
         plot_url1 = f"https://alaskasnowlines.streamlit.app/plot_elev?rgi_no={rgi_no}"
         plot_url2 = f"https://alaskasnowlines.streamlit.app/plot_area?rgi_no={rgi_no}"
         try:
