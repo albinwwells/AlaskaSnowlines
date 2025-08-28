@@ -176,7 +176,7 @@ if manual_input:
             icon=folium.Icon(color="blue", prefix='fa', icon="snowflake")
         ).add_to(m)
 
-        st_folium(m, width=800, height=500)
+        st_folium(m, width=1000, height=700)
     else:
         st.error("No matching glacier found.")
 
