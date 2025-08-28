@@ -60,40 +60,6 @@ st.markdown(
 st.write("## Alaska Snowlines – Glacier Finder")
 
 # ---------------- Load glacier dataset ----------------
-ZENODO_URL = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2_reduc.gpkg.zip?download=1"
-
-@st.cache_data(show_spinner="Loading glacier outlines...")
-def load_glaciers(url):
-    # Persistent cache folder
-    cache_dir = "/tmp/alaska_glaciers"
-    os.makedirs(cache_dir, exist_ok=True)
-
-    gpkg_path = os.path.join(cache_dir, "RGI2000-v7.0-G-01_alaska.gpkg")
-
-    # If already downloaded, read from cache
-    if os.path.exists(gpkg_path):
-        gdf = gpd.read_file(gpkg_path)
-        return gdf
-
-    # Download ZIP
-    response = requests.get(url)
-    response.raise_for_status()
-    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-        gpkg_name = [f for f in zf.namelist() if f.endswith(".gpkg")][0]
-        # Extract GPKG to cache
-        zf.extract(gpkg_name, cache_dir)
-        extracted_path = os.path.join(cache_dir, gpkg_name)
-        # Rename to standard path
-        os.rename(extracted_path, gpkg_path)
-
-    gdf = gpd.read_file(gpkg_path)
-    return gdf
-
-# Load glaciers
-gdf = load_glaciers(ZENODO_URL)
-gdf = gdf[gdf["area_km2"] > 2].copy()
-gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
-
 csv_url = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
 @st.cache_data(show_spinner="Loading possible glaciers...")
 def load_csv(url):
@@ -145,8 +111,7 @@ if manual_input:
         
         # ---------------- Static map centered on glacier ----------------
         center = [glacier["cenlat"], glacier["cenlon"]]
-        m = folium.Map(location=center, zoom_start=9, tiles="CartoDB positron", zoom_control=False)
-        m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron", name="Basemap")
+        m = folium.Map(location=center, zoom_start=8, tiles="CartoDB positron", name="Basemap")
         folium.TileLayer(
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             attr="Esri",
