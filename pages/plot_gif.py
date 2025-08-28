@@ -54,13 +54,13 @@ if manual_input is not None:
         if matches.empty:
             st.error("No matching glacier found.")
 
-@st.cache_data(show_spinner="Downloading animation...")
+@st.cache_data(show_spinner="Downloading animation...", ttl=24*3600)
 def download_gif_zip(url: str):
     response = requests.get(url)
     response.raise_for_status()
     return io.BytesIO(response.content)
 
-@st.cache_data(show_spinner="Loading animation...")
+@st.cache_data(show_spinner="Loading animation...", ttl=24*3600)
 def get_animation_html(zip_bytes, rgi_no: str):
     with zipfile.ZipFile(zip_bytes) as zf:
         matching_files = [f for f in zf.namelist() if f.startswith(f"animations/{rgi_no}") and f.endswith("_animation.html")]
