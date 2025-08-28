@@ -173,7 +173,7 @@ if manual_input:
         folium.Marker(
             location=center,
             popup=popup,
-            icon=folium.Icon(color="blue", icon="info-sign")
+            icon=folium.Icon(color="blue", icon="mountain")
         ).add_to(m)
 
         st_folium(m, width=800, height=600)
