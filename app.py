@@ -155,6 +155,14 @@ if manual_input:
             control=True
         ).add_to(m)
 
+        plot_url1 = f"https://alaskasnowlines.streamlit.app/plot_elev?rgi_no={rgi_no}"
+        plot_url2 = f"https://alaskasnowlines.streamlit.app/plot_area?rgi_no={rgi_no}"
+        try:
+            glac_name_short = glacier['glac_name'].split(' Glacier')[0]
+            plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif?name={glac_name_short}"
+        except:
+            plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif"
+
         popup_html = f"""
         <b>RGI ID:</b> {glacier['rgi_id']}<br>
         <b>Name:</b> {glacier['glac_name']}<br>
