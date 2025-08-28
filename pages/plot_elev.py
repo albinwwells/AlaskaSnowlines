@@ -31,7 +31,7 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
     """" Heatmap plotting function """
     fig, ax = plt.subplots(figsize=figsize)
     
-    dates_12d = pd.date_range(dates, dates[-1], freq='12D')
+    dates_12d = pd.date_range(dates[0], dates[-1], freq='12D')
     dates_12d_str = [x.strftime('%Y%m%d') for x in dates_12d]
     db_bin_12d = np.zeros((db_bin.shape[0], len(dates_12d)))
     db_bin_12d[:] = np.nan
