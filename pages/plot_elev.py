@@ -111,20 +111,16 @@ def fetch_snowline_data(rgi_no: str, use_eos_corr: bool = False):
         with zf.open(file_name) as inner_zip_file:
             with zipfile.ZipFile(inner_zip_file) as gzf:
                 for fname in gzf.namelist():
-                    if use_eos_corr:
-                        if "snowline_elev_percentile" in fname and "eos_corr" in fname and "eabin" not in fname:
+                    if "snowline_elev_percentile" in fname and "eos_corr" not in fname and "eabin" not in fname:
+                        if use_eos_corr:
+                            sl_list.append(gzf.read(fname.replace("percentile", "percentile_eos_corr")).decode())
+                            me_list.append(gzf.read(fname.replace("snowline_elev_percentile", "melt_extent_elev_percentile_eos_corr")).decode())
+                        else:
                             sl_list.append(gzf.read(fname).decode())
                             me_list.append(gzf.read(fname.replace("snowline", "melt_extent")).decode())
-                            db_list.append(gzf.read(fname.replace("snowline_elev_percentile_eos_corr", "db_bin_mean")).decode())
-                            hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile_eos_corr", "hypsometry")).decode())
-                            pr_list.append(fname.split("_snowline_elev_percentile_eos_corr_")[-1][:-4])
-                    else:
-                        if "snowline_elev_percentile" in fname and "eos_corr" not in fname and "eabin" not in fname:
-                            sl_list.append(gzf.read(fname).decode())
-                            me_list.append(gzf.read(fname.replace("snowline", "melt_extent")).decode())
-                            db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
-                            hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
-                            pr_list.append(fname.split("_snowline_elev_percentile_")[-1][:-4])
+                        db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
+                        hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
+                        pr_list.append(fname.split("_snowline_elev_percentile_")[-1][:-4])
                     st.write(len(sl_list), len(db_list), len(hyps_list))
 
     return sl_list, me_list, db_list, hyps_list, pr_list
