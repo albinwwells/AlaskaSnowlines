@@ -61,7 +61,7 @@ st.write("## Alaska Snowlines – Glacier Finder")
 
 # ---------------- Load glacier dataset ----------------
 csv_url = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
-@st.cache_data(show_spinner="Loading possible glaciers...")
+@st.cache_data(show_spinner="Loading possible glaciers...", ttl=24*3600)
 def load_csv(url):
     # Persistent cache folder
     cache_dir = "/tmp/alaska_glaciers"
@@ -111,7 +111,7 @@ if manual_input:
         
         # ---------------- Static map centered on glacier ----------------
         center = [glacier["cenlat"], glacier["cenlon"]]
-        m = folium.Map(location=center, zoom_start=8, tiles="CartoDB positron", name="Basemap")
+        m = folium.Map(location=center, zoom_start=9, tiles="CartoDB positron", name="Basemap")
         folium.TileLayer(
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             attr="Esri",
