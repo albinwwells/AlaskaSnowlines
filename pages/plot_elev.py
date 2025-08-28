@@ -118,6 +118,7 @@ def fetch_snowline_data(rgi_no: str, use_eos_corr: bool = False):
                             db_list.append(gzf.read(fname.replace("snowline_elev_percentile_eos_corr", "db_bin_mean")).decode())
                             hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile_eos_corr", "hypsometry")).decode())
                             pr_list.append(fname.split("_snowline_elev_percentile_eos_corr_")[-1][:-4])
+                            st.write(sl_list, db_list, hyps_list)
                     else:
                         if "snowline_elev_percentile" in fname and "eos_corr" not in fname and "eabin" not in fname:
                             sl_list.append(gzf.read(fname).decode())
