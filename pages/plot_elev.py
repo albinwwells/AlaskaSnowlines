@@ -214,7 +214,6 @@ if rgi_no is None:
     st.page_link("app.py", label="No glacier selected. Go back to the map selection or enter a glacier above.")
 else:
     with st.container():
-        st.subheader("Settings")
         use_eos_corr = st.toggle("Apply end-of-summer correction", value=False)
         
     st.write(f"### Data for RGI v7: {rgi_no}")
