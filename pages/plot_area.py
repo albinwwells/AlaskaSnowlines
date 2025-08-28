@@ -76,7 +76,7 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
     return fig
 
 # ---------------- Fetch glacier snowline + melt CSVs ----------------
-@st.cache_data(show_spinner="Fetching glacier data...")
+@st.cache_data(show_spinner="Fetching glacier data...", ttl=24*3600)
 def fetch_snowline_data(rgi_no: str):
     """Fetch snowline and melt extent CSVs for a given glacier number."""
     json_path = os.path.join("data", "rgi_data_links.json")
@@ -115,7 +115,7 @@ def fetch_snowline_data(rgi_no: str):
 
     return sl_list, me_list, db_list, hyps_list, pr_list
 
-@st.cache_data(show_spinner="Accessing data downloading options...")
+@st.cache_data(show_spinner="Accessing data downloading options...", ttl=24*3600)
 def download_data(rgi_no: str):
     """Fetch only the inner rgi_no.zip from the outer ZIP on Zenodo."""
     # Load JSON mapping
