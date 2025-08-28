@@ -77,7 +77,7 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
 
 # ---------------- Fetch glacier snowline + melt CSVs ----------------
 @st.cache_data(show_spinner="Fetching glacier data...", ttl=24*3600)
-def fetch_snowline_data(rgi_no: str):
+def fetch_snowline_data(rgi_no: str, use_eos_corr: bool = False):
     """Fetch snowline and melt extent CSVs for a given glacier number."""
     json_path = os.path.join("data", "rgi_data_links.json")
     with open(json_path, "r") as f:
@@ -111,12 +111,20 @@ def fetch_snowline_data(rgi_no: str):
         with zf.open(file_name) as inner_zip_file:
             with zipfile.ZipFile(inner_zip_file) as gzf:
                 for fname in gzf.namelist():
-                    if "snowline_elev_percentile" in fname and "eos_corr" not in fname and "eabin" not in fname:
-                        sl_list.append(gzf.read(fname).decode())
-                        me_list.append(gzf.read(fname.replace("snowline", "melt_extent")).decode())
-                        db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
-                        hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
-                        pr_list.append(fname.split("_snowline_elev_percentile_")[-1][:-4])
+                    if use_eos_corr:
+                        if "snowline_elev_percentile" in fname and "eos_corr" in fname and "eabin" not in fname:
+                            sl_list.append(gzf.read(fname).decode())
+                            me_list.append(gzf.read(fname.replace("snowline", "melt_extent")).decode())
+                            db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
+                            hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
+                            pr_list.append(fname.split("_snowline_elev_percentile_")[-1][:-4])
+                    else:
+                        if "snowline_elev_percentile" in fname and "eos_corr" not in fname and "eabin" not in fname:
+                            sl_list.append(gzf.read(fname).decode())
+                            me_list.append(gzf.read(fname.replace("snowline", "melt_extent")).decode())
+                            db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
+                            hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
+                            pr_list.append(fname.split("_snowline_elev_percentile_")[-1][:-4])
 
     return sl_list, me_list, db_list, hyps_list, pr_list
 
@@ -209,9 +217,12 @@ if rgi_no is None:
     # st.warning("No glacier selected. Go back to the map and click a glacier.")
     st.page_link("app.py", label="No glacier selected. Go back to the map selection or enter a glacier above.")
 else:
-    # Convert RGI ID → RGI number (your convention: 01.xxxxx)
+    with st.container():
+        st.subheader("Settings")
+        use_eos_corr = st.toggle("Apply end-of-summer correction", value=False)
+        
     st.write(f"### Data for RGI v7: {rgi_no}")
-    sl_dfs, me_dfs, db_dfs, hyps_dfs, prs = fetch_snowline_data(rgi_no)
+    sl_dfs, me_dfs, db_dfs, hyps_dfs, prs = fetch_snowline_data(rgi_no, use_eos_corr=use_eos_corr)
 
     if sl_dfs is None:
         st.error("No snowline data found for this glacier.")
