@@ -146,10 +146,59 @@ if manual_input:
         # ---------------- Static map centered on glacier ----------------
         center = [glacier["cenlat"], glacier["cenlon"]]
         m = folium.Map(location=center, zoom_start=9, tiles="CartoDB positron", zoom_control=False)
+        m = folium.Map(location=center, zoom_start=4, tiles="CartoDB positron", name="Basemap")
+        folium.TileLayer(
+            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            attr="Esri",
+            name="Esri Satellite",
+            overlay=False,
+            control=True
+        ).add_to(m)
+
+        popup_html = f"""
+        <b>RGI ID:</b> {glacier['rgi_id']}<br>
+        <b>Name:</b> {glacier['glac_name']}<br>
+        <b>Area:</b> {round(glacier['area_km2'], 1)} km2<br>
+        <b>Min elev:</b> {round(glacier['zmin_m'])} m<br>
+        <b>Max elev:</b> {round(glacier['zmax_m'])} m<br>
+        <a href="{plot_url1}" target="_blank" style="
+            display:inline-block;
+            margin-top:5px;
+            padding:4px 8px;
+            background:#007BFF;
+            color:white;
+            text-decoration:none;
+            border-radius:4px;">
+            Plot data (elevation bins)
+        </a>
+        <br>
+        <a href="{plot_url2}" target="_blank" style="
+            display:inline-block;
+            margin-top:5px;
+            padding:4px 8px;
+            background:#007BFF;
+            color:white;
+            text-decoration:none;
+            border-radius:4px;">
+            Plot data (area bins)
+        </a>
+        <br>
+        <a href="{plot_url3}" target="_blank" style="
+            display:inline-block;
+            margin-top:5px;
+            padding:4px 8px;
+            background:#007BFF;
+            color:white;
+            text-decoration:none;
+            border-radius:4px;">
+            Animate data
+        </a>
+        """
+        popup = folium.Popup(popup_html, max_width=500)
 
         folium.Marker(
             location=center,
-            popup=f"{glacier['glac_name']}<br>{glacier['rgi_id']}",
+            popup=popup,
             icon=folium.Icon(color="blue", icon="info-sign")
         ).add_to(m)
 
