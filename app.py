@@ -176,12 +176,12 @@ if manual_input:
             icon=folium.Icon(color="blue", prefix='fa', icon="snowflake")
         ).add_to(m)
 
-        st_folium(m, width=800, height=600)
+        st_folium(m, width=800, height=500)
     else:
         st.error("No matching glacier found.")
 
 
-
+# ----- old code: too slow / too expensive -----
 # import streamlit as st
 # import pandas as pd
 # import geopandas as gpd
