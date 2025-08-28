@@ -25,13 +25,13 @@ st.session_state["current_page"] = "plot_elev"
 mpl_lock = threading.Lock()
 
 # ---------------- plotting functions ----------------
-def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', cbar_label='Backscatter [dB]', 
-                    ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6), bins2plot_lowerquantile=2, 
-                    bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
+def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax, glacno, cmap='RdYlBu', 
+                    cbar_label='Backscatter [dB]', ylabel='Elevation [m a.s.l.]', glac_name_dict={}, figsize=(9,6), 
+                    bins2plot_lowerquantile=2, bins2plot_upperquantile=98, title_info='', **kwargs):
     """" Heatmap plotting function """
     fig, ax = plt.subplots(figsize=figsize)
     
-    dates_12d = pd.date_range(dates[frame_cut], dates[-1], freq='12D')
+    dates_12d = pd.date_range(dates, dates[-1], freq='12D')
     dates_12d_str = [x.strftime('%Y%m%d') for x in dates_12d]
     db_bin_12d = np.zeros((db_bin.shape[0], len(dates_12d)))
     db_bin_12d[:] = np.nan
@@ -121,7 +121,6 @@ def fetch_snowline_data(rgi_no: str, use_eos_corr: bool = False):
                         db_list.append(gzf.read(fname.replace("snowline_elev_percentile", "db_bin_mean")).decode())
                         hyps_list.append(gzf.read(fname.replace("snowline_elev_percentile", "hypsometry")).decode())
                         pr_list.append(fname.split("_snowline_elev_percentile_")[-1][:-4])
-                    st.write(len(sl_list), len(db_list), len(hyps_list))
 
     return sl_list, me_list, db_list, hyps_list, pr_list
 
@@ -250,11 +249,11 @@ else:
     
                 # ---------------- Plot ----------------
                 with mpl_lock:
-                    fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
-                                          binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
+                    fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, dates_me=dates_per, dates_sl=dates_sl_per, 
+                                          bins_center=glac_zbins_center, binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
                                           glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
                                           line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
-                                                     (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+                                                     (dates_sl_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
                 st.pyplot(fig)
 
         # download button
