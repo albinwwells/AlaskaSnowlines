@@ -111,7 +111,7 @@ if manual_input:
         
         # ---------------- Static map centered on glacier ----------------
         center = [glacier["cenlat"], glacier["cenlon"]]
-        m = folium.Map(location=center, zoom_start=9, tiles="CartoDB positron", name="Basemap")
+        m = folium.Map(location=center, zoom_start=10, tiles="CartoDB positron", name="Basemap")
         folium.TileLayer(
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             attr="Esri",
