@@ -34,7 +34,7 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
     try:
         dates_12d = pd.date_range(dates[frame_cut], dates[-1], freq='12D')
     except:
-        raise DateBoundsError(f"Dates exceed data bounds for glacier {glac_name+title_info}")
+        return f"Dates exceed data bounds for glacier {glac_name+title_info}"
         
     dates_12d_str = [x.strftime('%Y%m%d') for x in dates_12d]
     db_bin_12d = np.zeros((db_bin.shape[0], len(dates_12d)))
@@ -241,14 +241,13 @@ else:
     
                 # ---------------- Plot ----------------
                 with mpl_lock:
-                    try:
-                        fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
-                                              binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
-                                              glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
-                                              line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
-                                                         (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
-                    except DateBoundsError as e:
-                        print(f"{e}")
+                    fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
+                                          binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
+                                          glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
+                                          line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
+                                                     (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+                    if isinstance(fig, str):
+                        st.write(fig)
                         continue
                 st.pyplot(fig)
                 
