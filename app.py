@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import geopandas as gpd
+from shapely.geometry import Point
 import folium
 import requests, zipfile, io, os
 from streamlit_folium import st_folium
@@ -88,6 +89,7 @@ st.session_state["gdf"] = df
 
 # ---------------- User input ----------------
 manual_input = st.text_input("Enter a glacier name or RGI number:")
+coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.47,-146.82):")
 
 if manual_input:
     # Case-insensitive substring match
@@ -108,8 +110,27 @@ if manual_input:
         else:
             glacier = matches.iloc[0]
             st.success(f"Found glacier: {glacier['glac_name']} ({glacier['rgi_id']})")
+                       
+elif coord_input:
+    try:
+        lat, lon = map(float, coord_input.split(","))
+        point = Point(lon, lat)
+        gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df["cenlon"], df["cenlat"]), crs="EPSG:4326")
+        gdf["distance"] = gdf.geometry.distance(point)
+        nearest = gdf.nsmallest(10, "distance").copy()
+
+        st.info(f"Found {len(nearest)} nearest glaciers. Please choose one:")
+        selected = st.selectbox(
+            "Select glacier:",
+            nearest["rgi_id"],
+            format_func=lambda rid: f"{rid} – {nearest.loc[nearest['rgi_id']==rid, 'glac_name'].values[0]}"
+        )
+        glacier = nearest[nearest["rgi_id"] == selected].iloc[0]
+    except Exception:
+        st.error("Invalid coordinates. Please enter in 'lat,lon' format.")
         
-        # ---------------- Static map centered on glacier ----------------
+    # ---------------- Static map centered on glacier ----------------
+    if glacier is not None:
         center = [glacier["cenlat"], glacier["cenlon"]]
         m = folium.Map(location=center, zoom_start=10, tiles="CartoDB positron", name="Basemap")
         folium.TileLayer(
