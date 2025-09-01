@@ -30,8 +30,12 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
                     bins2plot_lowerquantile=2, bins2plot_upperquantile=98, title_info='', **kwargs):
     """" Heatmap plotting function """
     fig, ax = plt.subplots(figsize=figsize)
-    
-    dates_12d = pd.date_range(dates[0], dates[-1], freq='12D')
+
+    try:
+        dates_12d = pd.date_range(dates[frame_cut], dates[-1], freq='12D')
+    except:
+        return f"Dates exceed data bounds for glacier {glacno+title_info}"
+
     dates_12d_str = [x.strftime('%Y%m%d') for x in dates_12d]
     db_bin_12d = np.zeros((db_bin.shape[0], len(dates_12d)))
     db_bin_12d[:] = np.nan
@@ -253,6 +257,9 @@ else:
                                           glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
                                           line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
                                                      (dates_sl_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+                    if isinstance(fig, str):
+                        st.write(fig)
+                        continue
                 st.pyplot(fig)
 
         # download button
