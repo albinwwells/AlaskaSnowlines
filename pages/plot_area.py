@@ -30,8 +30,12 @@ def plot_db_heatmap(db_bin, dates, bins_center, binned_area, set_ymin, set_ymax,
                     bins2plot_upperquantile=98, frame_cut=0, title_info='', **kwargs):
     """" Heatmap plotting function """
     fig, ax = plt.subplots(figsize=figsize)
-    
-    dates_12d = pd.date_range(dates[frame_cut], dates[-1], freq='12D')
+
+    try:
+        dates_12d = pd.date_range(dates[frame_cut], dates[-1], freq='12D')
+    except:
+        raise DateBoundsError(f"Dates exceed data bounds for glacier {glac_name+title_info}")
+        
     dates_12d_str = [x.strftime('%Y%m%d') for x in dates_12d]
     db_bin_12d = np.zeros((db_bin.shape[0], len(dates_12d)))
     db_bin_12d[:] = np.nan
@@ -189,12 +193,7 @@ if manual_input is not None:
 # ---------------- filter date range ----------------
 def dates_filter_for_plotting(df, date_start='2017-01-01', date_end='2025-01-01'):
     df.columns = pd.to_datetime(df.columns)
-
-    try:
-        df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
-    except:
-        raise DateBoundsError(f"Dates exceed data bounds from {df.columns.min().date()} to {df.columns.max().date()}")
-
+    df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
     return df_filt
 
 default_start = datetime.date(2017, 1, 1)
@@ -223,11 +222,7 @@ else:
                 me_df = pd.read_csv(io.StringIO(me_df), index_col=0)
                 me_df.index = pd.to_datetime(me_df.index, format='%Y-%m-%d')
                 db_df = pd.read_csv(io.StringIO(db_df), index_col=0)
-                try:
-                    db_df = dates_filter_for_plotting(db_df, date_start=date_start, date_end=date_end)
-                except DateBoundsError as e:
-                    print(f"{e}")
-                    continue
+                db_df = dates_filter_for_plotting(db_df, date_start=date_start, date_end=date_end)
                 hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
                 
                 glac_zbins_center = np.array(hyps_df.index.tolist())
@@ -246,11 +241,15 @@ else:
     
                 # ---------------- Plot ----------------
                 with mpl_lock:
-                    fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
-                                          binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
-                                          glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
-                                          line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
-                                                     (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+                    try:
+                        fig = plot_db_heatmap(db_bin=glac_binned_data,  dates=dates, bins_center=glac_zbins_center,
+                                              binned_area=binned_area, set_ymin=set_ymin, set_ymax=set_ymax,
+                                              glacno=rgi_no, title_info=f" (pathrow: {pr})", figsize=(12, 4), 
+                                              line_plot=[(dates_per, me_elev_per, 'k', '-', 0.7, 'Melt extent'),
+                                                         (dates_per, sl_elev_per, 'k', '-.', 0.7, 'Snowline')])
+                    except DateBoundsError as e:
+                        print(f"{e}")
+                        continue
                 st.pyplot(fig)
                 
         # download button
