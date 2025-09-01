@@ -95,6 +95,7 @@ def clear_coord():
     
 manual_input = st.text_input("Enter a glacier name or RGI number (e.g. Gulkana Glacier):", key="manual_input", on_change=clear_coord)
 coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.28,-145.42):", key="coord_input", on_change=clear_manual)
+glacier = None
 
 if manual_input:
     matches = df[
