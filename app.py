@@ -88,7 +88,7 @@ df = df[~df["glac_name"].str.contains("_abl", case=False, na=False)].copy()
 st.session_state["gdf"] = df
 
 # ---------------- User input ----------------
-manual_input = st.text_input("Enter a glacier name or RGI number:")
+manual_input = st.text_input("Enter a glacier name or RGI number (e.g. Gulkana Glacier)")
 coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.28,-145.42):")
 
 if manual_input:
