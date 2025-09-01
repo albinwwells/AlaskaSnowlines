@@ -89,7 +89,7 @@ st.session_state["gdf"] = df
 
 # ---------------- User input ----------------
 manual_input = st.text_input("Enter a glacier name or RGI number:")
-coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.47,-146.82):")
+coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.28,-145.42):")
 
 if manual_input:
     # Case-insensitive substring match
