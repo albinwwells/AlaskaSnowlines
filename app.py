@@ -115,7 +115,7 @@ if manual_input:
             glacier = matches.iloc[0]
             st.success(f"Found glacier: {glacier['glac_name']} ({glacier['rgi_id']})")
                        
-if coord_input:
+elif coord_input:
     try:
         lat, lon = map(float, coord_input.split(","))
         point = Point(lon, lat)
