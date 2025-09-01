@@ -89,9 +89,11 @@ st.session_state["gdf"] = df
 
 # ---------------- User input ----------------
 def clear_manual():
-    st.session_state.manual_input = ""
+    if st.session_state.coord_input:
+        st.session_state.manual_input = ""
 def clear_coord():
-    st.session_state.coord_input = ""
+    if st.session_state.manual_input:
+        st.session_state.coord_input = ""
     
 manual_input = st.text_input("Enter a glacier name or RGI number (e.g. Gulkana Glacier)", key="manual_input", on_change=clear_coord)
 coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.28,-145.42)", key="coord_input", on_change=clear_manual)
