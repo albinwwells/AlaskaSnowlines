@@ -189,7 +189,12 @@ if manual_input is not None:
 # ---------------- filter date range ----------------
 def dates_filter_for_plotting(df, date_start='2017-01-01', date_end='2025-01-01'):
     df.columns = pd.to_datetime(df.columns)
-    df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
+
+    try:
+        df_filt = df.loc[:, (df.columns >= date_start) & (df.columns < date_end)]
+    except:
+        raise DateBoundsError(f"Dates exceed data bounds from {df.columns.min().date()} to {df.columns.max().date()}")
+
     return df_filt
 
 default_start = datetime.date(2017, 1, 1)
@@ -197,7 +202,6 @@ default_end = datetime.date(2025, 1, 1)
 date_range = st.slider("Select plot date range:", min_value=datetime.date(2016, 1, 1), max_value=datetime.date(2025, 1, 1),
                        value=(default_start, default_end), format="YYYY-MM-DD")
 date_start, date_end = date_range[0].strftime("%Y-%m-%d"), date_range[1].strftime("%Y-%m-%d")
-
 
 # plot data
 rgi_no = rgi_no_man if rgi_no_man is not None else rgi_no_map
@@ -219,7 +223,11 @@ else:
                 me_df = pd.read_csv(io.StringIO(me_df), index_col=0)
                 me_df.index = pd.to_datetime(me_df.index, format='%Y-%m-%d')
                 db_df = pd.read_csv(io.StringIO(db_df), index_col=0)
-                db_df = dates_filter_for_plotting(db_df, date_start=date_start, date_end=date_end)
+                try:
+                    db_df = dates_filter_for_plotting(db_df, date_start=date_start, date_end=date_end)
+                except DateBoundsError as e:
+                    print(f"{e}")
+                    continue
                 hyps_df = pd.read_csv(io.StringIO(hyps_df), index_col=0)
                 
                 glac_zbins_center = np.array(hyps_df.index.tolist())
