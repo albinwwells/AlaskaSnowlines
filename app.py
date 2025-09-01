@@ -95,7 +95,6 @@ def clear_coord():
     
 manual_input = st.text_input("Enter a glacier name or RGI number (e.g. Gulkana Glacier):", key="manual_input", on_change=clear_coord)
 coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.28,-145.42):", key="coord_input", on_change=clear_manual)
-glacier = None
 
 if manual_input:
     matches = df[
@@ -115,6 +114,8 @@ if manual_input:
         else:
             glacier = matches.iloc[0]
             st.success(f"Found glacier: {glacier['glac_name']} ({glacier['rgi_id']})")
+    else:
+        glacier = None
                        
 elif coord_input:
     try:
@@ -132,7 +133,10 @@ elif coord_input:
         )
         glacier = nearest[nearest["rgi_id"] == selected].iloc[0]
     except Exception:
+        glacier = None
         st.error("Invalid coordinates. Please enter in 'lat,lon' format.")
+else:
+    glacier = None
         
 # ---------------- Static map centered on glacier ----------------
 if glacier is not None:
