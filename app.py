@@ -89,11 +89,9 @@ st.session_state["gdf"] = df
 
 # ---------------- User input ----------------
 def clear_manual():
-    if st.session_state.coord_input:
-        st.session_state.manual_input = ""
+    st.session_state.manual_input = ""
 def clear_coord():
-    if st.session_state.manual_input:
-        st.session_state.coord_input = ""
+    st.session_state.coord_input = ""
     
 manual_input = st.text_input("Enter a glacier name or RGI number (e.g. Gulkana Glacier)", key="manual_input", on_change=clear_coord)
 coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.28,-145.42)", key="coord_input", on_change=clear_manual)
@@ -135,77 +133,77 @@ elif coord_input:
     except Exception:
         st.error("Invalid coordinates. Please enter in 'lat,lon' format.")
         
-    # ---------------- Static map centered on glacier ----------------
-    if glacier is not None:
-        center = [glacier["cenlat"], glacier["cenlon"]]
-        m = folium.Map(location=center, zoom_start=10, tiles="CartoDB positron", name="Basemap")
-        folium.TileLayer(
-            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            attr="Esri",
-            name="Esri Satellite",
-            overlay=False,
-            control=True
-        ).add_to(m)
+# ---------------- Static map centered on glacier ----------------
+if glacier is not None:
+    center = [glacier["cenlat"], glacier["cenlon"]]
+    m = folium.Map(location=center, zoom_start=10, tiles="CartoDB positron", name="Basemap")
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri",
+        name="Esri Satellite",
+        overlay=False,
+        control=True
+    ).add_to(m)
 
-        rgi_no = "01." + glacier['rgi_id'][-5:]
-        plot_url1 = f"https://alaskasnowlines.streamlit.app/plot_elev?rgi_no={rgi_no}"
-        plot_url2 = f"https://alaskasnowlines.streamlit.app/plot_area?rgi_no={rgi_no}"
-        try:
-            glac_name_short = glacier['glac_name'].split(' Glacier')[0]
-            plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif?name={glac_name_short}"
-        except:
-            plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif"
+    rgi_no = "01." + glacier['rgi_id'][-5:]
+    plot_url1 = f"https://alaskasnowlines.streamlit.app/plot_elev?rgi_no={rgi_no}"
+    plot_url2 = f"https://alaskasnowlines.streamlit.app/plot_area?rgi_no={rgi_no}"
+    try:
+        glac_name_short = glacier['glac_name'].split(' Glacier')[0]
+        plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif?name={glac_name_short}"
+    except:
+        plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif"
 
-        popup_html = f"""
-        <b>RGI ID:</b> {glacier['rgi_id']}<br>
-        <b>Name:</b> {glacier['glac_name']}<br>
-        <b>Area:</b> {round(glacier['area_km2'], 1)} km2<br>
-        <b>Min elev:</b> {round(glacier['zmin_m'])} m<br>
-        <b>Max elev:</b> {round(glacier['zmax_m'])} m<br>
-        <a href="{plot_url1}" target="_blank" style="
-            display:inline-block;
-            margin-top:5px;
-            padding:4px 8px;
-            background:#007BFF;
-            color:white;
-            text-decoration:none;
-            border-radius:4px;">
-            Plot data (elevation bins)
-        </a>
-        <br>
-        <a href="{plot_url2}" target="_blank" style="
-            display:inline-block;
-            margin-top:5px;
-            padding:4px 8px;
-            background:#007BFF;
-            color:white;
-            text-decoration:none;
-            border-radius:4px;">
-            Plot data (area bins)
-        </a>
-        <br>
-        <a href="{plot_url3}" target="_blank" style="
-            display:inline-block;
-            margin-top:5px;
-            padding:4px 8px;
-            background:#007BFF;
-            color:white;
-            text-decoration:none;
-            border-radius:4px;">
-            Animate data
-        </a>
-        """
-        popup = folium.Popup(popup_html, max_width=500)
+    popup_html = f"""
+    <b>RGI ID:</b> {glacier['rgi_id']}<br>
+    <b>Name:</b> {glacier['glac_name']}<br>
+    <b>Area:</b> {round(glacier['area_km2'], 1)} km2<br>
+    <b>Min elev:</b> {round(glacier['zmin_m'])} m<br>
+    <b>Max elev:</b> {round(glacier['zmax_m'])} m<br>
+    <a href="{plot_url1}" target="_blank" style="
+        display:inline-block;
+        margin-top:5px;
+        padding:4px 8px;
+        background:#007BFF;
+        color:white;
+        text-decoration:none;
+        border-radius:4px;">
+        Plot data (elevation bins)
+    </a>
+    <br>
+    <a href="{plot_url2}" target="_blank" style="
+        display:inline-block;
+        margin-top:5px;
+        padding:4px 8px;
+        background:#007BFF;
+        color:white;
+        text-decoration:none;
+        border-radius:4px;">
+        Plot data (area bins)
+    </a>
+    <br>
+    <a href="{plot_url3}" target="_blank" style="
+        display:inline-block;
+        margin-top:5px;
+        padding:4px 8px;
+        background:#007BFF;
+        color:white;
+        text-decoration:none;
+        border-radius:4px;">
+        Animate data
+    </a>
+    """
+    popup = folium.Popup(popup_html, max_width=500)
 
-        folium.Marker(
-            location=center,
-            popup=popup,
-            icon=folium.Icon(color="blue", prefix='fa', icon="snowflake")
-        ).add_to(m)
+    folium.Marker(
+        location=center,
+        popup=popup,
+        icon=folium.Icon(color="blue", prefix='fa', icon="snowflake")
+    ).add_to(m)
 
-        st_folium(m, width=1000, height=700)
-    else:
-        st.error("No matching glacier found.")
+    st_folium(m, width=1000, height=700)
+else:
+    st.error("No matching glacier found.")
 
 
 # ----- old code: too slow / too expensive -----
