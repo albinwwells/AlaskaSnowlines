@@ -92,7 +92,6 @@ manual_input = st.text_input("Enter a glacier name or RGI number (e.g. Gulkana G
 coord_input = st.text_input("Or enter lat, lon coordinates (e.g. 63.28,-145.42):")
 
 if manual_input:
-    # Case-insensitive substring match
     matches = df[
         df["rgi_id"].str.contains(manual_input, case=False, na=False) |
         df["glac_name"].str.contains(manual_input, case=False, na=False)
@@ -111,7 +110,7 @@ if manual_input:
             glacier = matches.iloc[0]
             st.success(f"Found glacier: {glacier['glac_name']} ({glacier['rgi_id']})")
                        
-elif coord_input:
+if coord_input:
     try:
         lat, lon = map(float, coord_input.split(","))
         point = Point(lon, lat)
