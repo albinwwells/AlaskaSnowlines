@@ -9,6 +9,15 @@ st.set_page_config(
     initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
 )
 
+def nav():
+    with st.sidebar:
+        st.title("Navigation")
+        st.page_link("https://alaskasnowlines.streamlit.app/", label="Home - glacier selection")
+        st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="Heatmap - elevation bins")
+        st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="Heatmap - area bins")
+        st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="Glacier animations")
+nav()
+
 # hide_sidebar_style = """
 #     <style>
 #         [data-testid="stSidebar"] {display: none;}
