@@ -2,17 +2,19 @@ name: Automated Push
 
 on:
   schedule:
-    - cron: "0 */12 * * *" # Every 12 hours (00:00 and 12:00 UTC)
+    - cron: "0 */12 * * *"  # Runs at midnight UTC and noon UTC, every day
+
+permissions:
+  contents: write  # Necessary to push changes
 
 jobs:
   push_changes:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write   # <— required so the workflow can push commits
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false  # we'll use the token explicitly
+          ref: main
+          persist-credentials: false
       - name: Commit and Push
         run: |
           git config user.name "github-actions[bot]"
