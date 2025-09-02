@@ -86,11 +86,6 @@ def fetch_snowline_data(rgi_no: str, use_eos_corr: bool = False):
     json_path = os.path.join("data", "rgi_data_links.json")
     with open(json_path, "r") as f:
         rgi_index = json.load(f)
-        
-    # json_url = "https://zenodo.org/records/16961713/files/rgi_data_links.json?download=1"
-    # response = requests.get(json_url)
-    # response.raise_for_status()
-    # rgi_index = response.json()  # dictionary: rgi_no to zip URL
     
     rgi_key = (rgi_no + ".zip").strip()
     try:
