@@ -13,13 +13,15 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# hide_sidebar_style = """
-#     <style>
-#         [data-testid="stSidebar"] {display: none;}
-#         [data-testid="stSidebarNav"] {display: none;}
-#     </style>
-# """
-# st.markdown(hide_sidebar_style, unsafe_allow_html=True)
+def nav():
+    with st.sidebar:
+        st.title("Navigation")
+        st.page_link("https://alaskasnowlines.streamlit.app/", label="Home - glacier selection")
+        st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="Heatmap - elevation bins")
+        st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="Heatmap - area bins")
+        st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="Glacier animations")
+nav()
+
 st.session_state["current_page"] = "plot_area"
 
 mpl_lock = threading.Lock()
