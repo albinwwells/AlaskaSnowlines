@@ -9,12 +9,18 @@ from streamlit_folium import st_folium
 st.set_page_config(
     page_title="Alaska Snowlines",
     layout="wide",
-    initial_sidebar_state="collapsed",
-    # menu_items={'Home - glacier selection': "https://alaskasnowlines.streamlit.app/",
-    #             'Heatmap plot - elevation bins': "https://alaskasnowlines.streamlit.app/plot_elev",
-    #             'Heatmap plot - area bins': "https://alaskasnowlines.streamlit.app/plot_area",
-    #             'Glacier animations': "https://alaskasnowlines.streamlit.app/plot_gif"}
+    initial_sidebar_state="collapsed"
 )
+
+hide_default_format = """
+    <style>
+        /* Hide the default Streamlit multipage navigation */
+        section[data-testid="stSidebarNav"] {
+            display: none;
+        }
+    </style>
+"""
+st.markdown(hide_default_format, unsafe_allow_html=True)
 
 with st.sidebar:
     st.title("Navigation")
@@ -22,15 +28,6 @@ with st.sidebar:
     st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="📊 Heatmap - Elevation Bins")
     st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="📊 Heatmap - Area Bins")
     st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="🎞️ Glacier Animations")
-
-
-# hide_sidebar_style = """
-#     <style>
-#         [data-testid="stSidebar"] {display: none;}
-#         [data-testid="stSidebarNav"] {display: none;}
-#     </style>
-# """
-# st.markdown(hide_sidebar_style, unsafe_allow_html=True)
 
 # ---------------- Navigation links ----------------
 st.markdown(
