@@ -92,7 +92,7 @@ else:
     # zip_bytes = download_gif_zip(gif_zip_fp)
     # animations = get_animation_html(zip_bytes, rgi_no)
     
-    box_url = "https://cmu.box.com/s/b8cr07pt6mjh4pl00awdpji6r218vm9f"
+    box_url = "https://cmu.box.com/s/fd7xrcozbdjxfvw41biaamrehakl1kud"
     zip_bytes = download_gif_zip(box_url)
     animations = get_animation_html(zip_bytes, rgi_no)
     
