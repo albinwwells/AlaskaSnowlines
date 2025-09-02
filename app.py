@@ -14,10 +14,10 @@ st.set_page_config(
 
 with st.sidebar:
     st.title("Navigation")
-    st.page_link("https://alaskasnowlines.streamlit.app/", label="Home - Glacier Selection")
-    st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="Heatmap - Elevation Bins")
-    st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="Heatmap - Area Bins")
-    st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="Glacier Animations")
+    st.page_link("https://alaskasnowlines.streamlit.app/", label="Home - glacier selection")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="Heatmap - elevation bins")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="Heatmap - area bins")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="Glacier animations")
 
 # ---------------- Navigation links ----------------
 st.markdown(
