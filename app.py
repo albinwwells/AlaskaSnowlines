@@ -10,15 +10,19 @@ st.set_page_config(
     page_title="Alaska Snowlines",
     layout="wide",         # optional: wide layout
     initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
+    menu_items={'Home - glacier selection': "https://alaskasnowlines.streamlit.app/",
+                'Heatmap plot - elevation bins': "https://alaskasnowlines.streamlit.app/plot_elev",
+                'Heatmap plot - area bins': "https://alaskasnowlines.streamlit.app/plot_area",
+                'Glacier animations': "https://alaskasnowlines.streamlit.app/plot_gif"}
 )
 
-hide_sidebar_style = """
-    <style>
-        [data-testid="stSidebar"] {display: none;}
-        [data-testid="stSidebarNav"] {display: none;}
-    </style>
-"""
-st.markdown(hide_sidebar_style, unsafe_allow_html=True)
+# hide_sidebar_style = """
+#     <style>
+#         [data-testid="stSidebar"] {display: none;}
+#         [data-testid="stSidebarNav"] {display: none;}
+#     </style>
+# """
+# st.markdown(hide_sidebar_style, unsafe_allow_html=True)
 
 # ---------------- Navigation links ----------------
 st.markdown(
