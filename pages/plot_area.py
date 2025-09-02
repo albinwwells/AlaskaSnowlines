@@ -9,17 +9,17 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(
     page_title="Plot (equal area bins)",
-    layout="wide",         # optional: wide layout
-    initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-hide_sidebar_style = """
-    <style>
-        [data-testid="stSidebar"] {display: none;}
-        [data-testid="stSidebarNav"] {display: none;}
-    </style>
-"""
-st.markdown(hide_sidebar_style, unsafe_allow_html=True)
+# hide_sidebar_style = """
+#     <style>
+#         [data-testid="stSidebar"] {display: none;}
+#         [data-testid="stSidebarNav"] {display: none;}
+#     </style>
+# """
+# st.markdown(hide_sidebar_style, unsafe_allow_html=True)
 st.session_state["current_page"] = "plot_area"
 
 mpl_lock = threading.Lock()
