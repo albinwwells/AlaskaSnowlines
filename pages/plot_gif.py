@@ -88,29 +88,9 @@ if rgi_no is None:
 else:
     st.write(f"### Animation for {rgi_no} Glacier")
 
-    # gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
-    # zip_bytes = download_gif_zip(gif_zip_fp)
-    # animations = get_animation_html(zip_bytes, rgi_no)
-    
-    # box_url = "https://cmu.box.com/s/fd7xrcozbdjxfvw41biaamrehakl1kud"
-    # zip_bytes = download_gif_zip(box_url)
-    # animations = get_animation_html(zip_bytes, rgi_no)
-
-    urls = [f"https://cmu.box.com/s/yqne7dz0dvmtvp218k16u9mhv0s2lg5x/{rgi_no}_123_197_202_animation.html?download=1"]
-    def get_animation_html(urls, rgi_no):
-        result = []
-        for url in urls:
-            fname = url.split("/")[-1]
-            if rgi_no in fname and fname.endswith("_animation.html"):
-                response = requests.get(url)
-                response.raise_for_status()
-                html_content = response.text
-                pathrow = fname.split(f"{rgi_no}_")[1].split("_animation")[0]
-                result.append((pathrow, html_content))
-        return result
-    animations = get_animation_html(urls, rgi_no)
-    
-
+    gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
+    zip_bytes = download_gif_zip(gif_zip_fp)
+    animations = get_animation_html(zip_bytes, rgi_no)
     
     if animations:
         for pathrow, html_content in animations:
