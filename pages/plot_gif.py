@@ -88,9 +88,14 @@ if rgi_no is None:
 else:
     st.write(f"### Animation for {rgi_no} Glacier")
 
-    gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
-    zip_bytes = download_gif_zip(gif_zip_fp)
+    # gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
+    # zip_bytes = download_gif_zip(gif_zip_fp)
+    # animations = get_animation_html(zip_bytes, rgi_no)
+    
+    box_url = "https://cmu.box.com/s/yqne7dz0dvmtvp218k16u9mhv0s2lg5x"
+    zip_bytes = download_gif_zip(box_url)
     animations = get_animation_html(zip_bytes, rgi_no)
+    
     if animations:
         for pathrow, html_content in animations:
             st.write(f"pathrow: {pathrow}")
