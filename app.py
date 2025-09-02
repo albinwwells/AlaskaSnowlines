@@ -8,8 +8,8 @@ from streamlit_folium import st_folium
 
 st.set_page_config(
     page_title="Alaska Snowlines",
-    layout="wide",         # optional: wide layout
-    initial_sidebar_state="collapsed"  # <- hides/collapses sidebar
+    layout="wide",
+    initial_sidebar_state="collapsed",
     menu_items={'Home - glacier selection': "https://alaskasnowlines.streamlit.app/",
                 'Heatmap plot - elevation bins': "https://alaskasnowlines.streamlit.app/plot_elev",
                 'Heatmap plot - area bins': "https://alaskasnowlines.streamlit.app/plot_area",
