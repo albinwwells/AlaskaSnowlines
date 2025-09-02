@@ -10,11 +10,19 @@ st.set_page_config(
     page_title="Alaska Snowlines",
     layout="wide",
     initial_sidebar_state="collapsed",
-    menu_items={'Home - glacier selection': "https://alaskasnowlines.streamlit.app/",
-                'Heatmap plot - elevation bins': "https://alaskasnowlines.streamlit.app/plot_elev",
-                'Heatmap plot - area bins': "https://alaskasnowlines.streamlit.app/plot_area",
-                'Glacier animations': "https://alaskasnowlines.streamlit.app/plot_gif"}
+    # menu_items={'Home - glacier selection': "https://alaskasnowlines.streamlit.app/",
+    #             'Heatmap plot - elevation bins': "https://alaskasnowlines.streamlit.app/plot_elev",
+    #             'Heatmap plot - area bins': "https://alaskasnowlines.streamlit.app/plot_area",
+    #             'Glacier animations': "https://alaskasnowlines.streamlit.app/plot_gif"}
 )
+
+with st.sidebar:
+    st.title("Navigation")
+    st.page_link("https://alaskasnowlines.streamlit.app/", label="🏔️ Home - Glacier Selection")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="📊 Heatmap - Elevation Bins")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="📊 Heatmap - Area Bins")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="🎞️ Glacier Animations")
+
 
 # hide_sidebar_style = """
 #     <style>
