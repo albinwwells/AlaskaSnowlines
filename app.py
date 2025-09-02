@@ -12,22 +12,12 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-hide_default_format = """
-    <style>
-        /* Hide the default Streamlit multipage navigation */
-        section[data-testid="stSidebarNav"] {
-            display: none;
-        }
-    </style>
-"""
-st.markdown(hide_default_format, unsafe_allow_html=True)
-
 with st.sidebar:
     st.title("Navigation")
-    st.page_link("https://alaskasnowlines.streamlit.app/", label="🏔️ Home - Glacier Selection")
-    st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="📊 Heatmap - Elevation Bins")
-    st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="📊 Heatmap - Area Bins")
-    st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="🎞️ Glacier Animations")
+    st.page_link("https://alaskasnowlines.streamlit.app/", label="Home - Glacier Selection")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="Heatmap - Elevation Bins")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="Heatmap - Area Bins")
+    st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="Glacier Animations")
 
 # ---------------- Navigation links ----------------
 st.markdown(
