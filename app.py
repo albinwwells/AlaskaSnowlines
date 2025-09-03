@@ -72,31 +72,6 @@ with st.spinner("Loading glacier outlines..."):
     df = df[df["area_km2"] > 2].copy()
     df = df[~df["glac_name"].str.contains("_abl", case=False, na=False)].copy()
     st.session_state["gdf"] = df
-# csv_url = "https://zenodo.org/records/16961713/files/RGI2000-v7.0-G-01_alaska_2km2.csv?download=1"
-# @st.cache_data(show_spinner="Loading possible glaciers...", ttl=24*3600)
-# def load_csv(url):
-#     # Persistent cache folder
-#     cache_dir = "/tmp/alaska_glaciers"
-#     os.makedirs(cache_dir, exist_ok=True)
-
-#     csv_path = os.path.join(cache_dir, "RGI2000-v7.0-G-01_alaska.csv")
-
-#     # If already downloaded, read from cache
-#     if os.path.exists(csv_path):
-#         df = gpd.read_file(csv_path)
-#         return df
-
-#     # Download ZIP
-#     response = requests.get(url)
-#     response.raise_for_status()
-#     df = pd.read_csv(io.StringIO(response.text))
-#     return df
-
-# # Load glaciers
-# df = load_csv(csv_url)
-# df = df[df["area_km2"] > 2].copy()
-# df = df[~df["glac_name"].str.contains("_abl", case=False, na=False)].copy()
-# st.session_state["gdf"] = df
 
 # ---------------- User input ----------------
 def clear_manual():
