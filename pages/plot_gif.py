@@ -58,11 +58,18 @@ if manual_input is not None:
         else:
             st.info(f"Found {len(matches)} possible matches. Please choose one:")
         selected = st.selectbox("Select glacier:", matches["glac_name"])
-        rgi_no_man = selected.split(' Glacier')[0]
+        rgi_no_man = selected.replace(" Glacier", "").replace("_abl", "").strip()
+        rgi_no_man = rgi_no_man.replace("/", "-")
     else:
         if matches.empty:
             st.error("No matching glacier found.")
 
+@st.cache_data(show_spinner="Accessing data downloading options...", ttl=300)
+def export_gif(url: str):
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.content
+    
 @st.cache_data(show_spinner="Downloading animation...", ttl=24*3600)
 def download_gif_zip(url: str):
     response = requests.get(url)
@@ -72,7 +79,7 @@ def download_gif_zip(url: str):
 @st.cache_data(show_spinner="Loading animation...", ttl=24*3600)
 def get_animation_html(zip_bytes, rgi_no: str):
     with zipfile.ZipFile(zip_bytes) as zf:
-        matching_files = [f for f in zf.namelist() if f.startswith(f"animations/{rgi_no}") and f.endswith("_animation.html")]
+        matching_files = [f for f in zf.namelist() if f.startswith(f"{rgi_no}") and f.endswith("_animation.html")]
         result = []
         for fname in matching_files:
             with zf.open(fname) as f:
@@ -88,7 +95,17 @@ if rgi_no is None:
 else:
     st.write(f"### Animation for {rgi_no} Glacier")
 
-    gif_zip_fp = "https://zenodo.org/records/16961713/files/animations.zip?download=1"
+    if (ord(rgi_no[0]) >= 65) and (ord(rgi_no[0]) < 68): # from A thru C
+        gif_zip_fp = f"https://zenodo.org/records/17054496/files/{rgi_no}.zip?download=1"
+    elif (ord(rgi_no[0]) >= 68) and (ord(rgi_no[0]) < 74): # from D thru I
+        gif_zip_fp = f"https://zenodo.org/records/17054526/files/{rgi_no}.zip?download=1"
+    elif (ord(rgi_no[0]) >= 74) and (ord(rgi_no[0]) < 79): # from J thru N
+        gif_zip_fp = f"https://zenodo.org/records/17054660/files/{rgi_no}.zip?download=1"
+    elif (ord(rgi_no[0]) >= 79) and (ord(rgi_no[0]) < 84): # from O thru S
+        gif_zip_fp = f"https://zenodo.org/records/17054835/files/{rgi_no}.zip?download=1"
+    elif (ord(rgi_no[0]) >= 84) and (ord(rgi_no[0]) < 91): # from T thru Z
+        gif_zip_fp = f"https://zenodo.org/records/17054907/files/{rgi_no}.zip?download=1"
+    
     zip_bytes = download_gif_zip(gif_zip_fp)
     animations = get_animation_html(zip_bytes, rgi_no)
     
@@ -96,5 +113,13 @@ else:
         for pathrow, html_content in animations:
             st.write(f"pathrow: {pathrow}")
             st.components.v1.html(html_content, height=800, scrolling=True)
+            
+        # download button
+        st.download_button(
+            label="Download animation",
+            data=export_gif(gif_zip_fp),  # fetch bytes directly here
+            file_name=f"{rgi_no}_animation.zip",
+            mime="application/zip"
+        )
     else:
         st.error(f"No animation available for {rgi_no} Glacier.")
