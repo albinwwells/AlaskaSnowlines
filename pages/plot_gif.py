@@ -70,7 +70,7 @@ def export_gif(url: str):
     response.raise_for_status()
     return response.content
     
-@st.cache_data(show_spinner="Downloading animation...", ttl=24*3600)
+@st.cache_data(show_spinner="Downloading animation...", ttl=30)
 def download_gif_zip(url: str):
     response = requests.get(url)
     response.raise_for_status()
