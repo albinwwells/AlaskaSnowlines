@@ -64,20 +64,19 @@ if manual_input is not None:
         if matches.empty:
             st.error("No matching glacier found.")
 
-@st.cache_data(show_spinner="Accessing data downloading options...", ttl=300)
+# @st.cache_data(show_spinner="Accessing data downloading options...", ttl=300)
 def export_gif(url: str):
     response = requests.get(url)
     response.raise_for_status()
     return response.content
     
 # @st.cache_data(show_spinner="Downloading animation...", ttl=30)
-with st.spinner("Downloading animation..."):
-    def download_gif_zip(url: str):
-        response = requests.get(url)
-        response.raise_for_status()
-        return io.BytesIO(response.content)
+def download_gif_zip(url: str):
+    response = requests.get(url)
+    response.raise_for_status()
+    return io.BytesIO(response.content)
 
-@st.cache_data(show_spinner="Loading animation...", ttl=24*3600)
+# @st.cache_data(show_spinner="Loading animation...", ttl=24*3600)
 def get_animation_html(zip_bytes, rgi_no: str):
     with zipfile.ZipFile(zip_bytes) as zf:
         matching_files = [f for f in zf.namelist() if f.startswith(f"{rgi_no}") and f.endswith("_animation.html")]
@@ -107,8 +106,10 @@ else:
     elif (ord(rgi_no[0]) >= 84) and (ord(rgi_no[0]) < 91): # from T thru Z
         gif_zip_fp = f"https://zenodo.org/records/17054907/files/{rgi_no}.zip?download=1"
     
-    zip_bytes = download_gif_zip(gif_zip_fp)
-    animations = get_animation_html(zip_bytes, rgi_no)
+    with st.spinner("Downloading animation..."):
+        zip_bytes = download_gif_zip(gif_zip_fp)
+    with st.spinner("Loading animation..."):
+        animations = get_animation_html(zip_bytes, rgi_no)
     
     if animations:
         for pathrow, html_content in animations:
@@ -116,11 +117,12 @@ else:
             st.components.v1.html(html_content, height=800, scrolling=True)
             
         # download button
-        st.download_button(
-            label="Download animation",
-            data=export_gif(gif_zip_fp),  # fetch bytes directly here
-            file_name=f"{rgi_no}_animation.zip",
-            mime="application/zip"
-        )
+        with st.spinner("Accessing data downloading options..."):
+            st.download_button(
+                label="Download animation",
+                data=export_gif(gif_zip_fp),  # fetch bytes directly here
+                file_name=f"{rgi_no}_animation.zip",
+                mime="application/zip"
+            )
     else:
         st.error(f"No animation available for {rgi_no} Glacier.")
