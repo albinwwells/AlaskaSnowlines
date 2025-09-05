@@ -114,7 +114,7 @@ else:
     if animations:
         for pathrow, html_content in animations:
             st.write(f"pathrow: {pathrow}")
-            st.components.v1.html(html_content, height=700, scrolling=False)
+            st.components.v1.html(html_content, height=600, scrolling=True)
             
         # download button
         with st.spinner("Accessing data downloading options..."):
