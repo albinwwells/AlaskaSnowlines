@@ -142,7 +142,7 @@ if glacier is not None:
     try:
         glac_name_short = glacier['glac_name'].replace(" Glacier", "").replace("_abl", "").strip()
         glac_name_short = glac_name_short.replace("/", "-")
-        plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif?name={glac_name_short}"
+        plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif?name={glac_name_short}&rgi_id={rgi_no[-5:]}"
     except:
         plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif"
 
