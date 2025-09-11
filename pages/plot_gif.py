@@ -85,7 +85,7 @@ if manual_input is not None:
         )
         
         rgi_id_man, rgi_no_man = selected
-        rgi_id_man = rgi_id[-5:]
+        rgi_id_man = rgi_id_man[-5:]
         rgi_no_man = rgi_no_man.replace(" Glacier", "").replace("_abl", "").strip()
         rgi_no_man = rgi_no_man.replace("/", "-")
     else:
