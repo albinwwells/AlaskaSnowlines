@@ -31,6 +31,7 @@ st.session_state["current_page"] = "animation"
 gdf = st.session_state.get("gdf", None)
 query_params = st.query_params
 rgi_no_map = query_params.get("name", None)
+rgi_id_map = query_params.get("rgi_id", None)
 rgi_no_man = None
 
 # Allow manual input
@@ -63,6 +64,33 @@ if manual_input is not None:
     else:
         if matches.empty:
             st.error("No matching glacier found.")
+            
+    # Case-insensitive substring match on rgi_id or glac_name
+    matches = gdf[
+        gdf["rgi_id"].str.contains(manual_input, case=False, na=False) |
+        gdf["glac_name"].str.contains(manual_input, case=False, na=False)
+    ]
+
+    if not matches.empty and len(matches) < 100:
+        if len(matches) == 1:
+            st.info(f"Found {len(matches)} possible match.")
+        else:
+            st.info(f"Found {len(matches)} possible matches. Please choose one:")
+            
+        options = list(zip(matches["rgi_id"], matches["glac_name"]))
+        selected = st.selectbox(
+            "Select glacier:",
+            options,
+            format_func=lambda opt: f"{opt[0]} – {opt[1]}"
+        )
+        
+        rgi_id_man, rgi_no_man = selected
+        rgi_id_man = rgi_id[-5:]
+        rgi_no_man = rgi_no_man.replace(" Glacier", "").replace("_abl", "").strip()
+        rgi_no_man = rgi_no_man.replace("/", "-")
+    else:
+        if matches.empty:
+            st.error("No matching glacier found.")
 
 # @st.cache_data(show_spinner="Accessing data downloading options...", ttl=300)
 def export_gif(url: str):
@@ -90,21 +118,24 @@ def get_animation_html(zip_bytes, rgi_no: str):
             
 # ---------------- show animation ----------------
 rgi_no = rgi_no_man if rgi_no_man is not None else rgi_no_map
+rgi_id = rgi_id_man if rgi_id_man is not None else rgi_id_map
 if rgi_no is None:
     st.page_link("app.py", label="No glacier selected. Go back to the map selection or enter a glacier above.")
 else:
-    st.write(f"### Animation for {rgi_no} Glacier")
+    st.write(f"### Animation for {rgi_no} Glacier (01.{rgi_id})")
 
     if (ord(rgi_no[0]) >= 65) and (ord(rgi_no[0]) < 68): # from A thru C
-        gif_zip_fp = f"https://zenodo.org/records/17054496/files/{rgi_no}.zip?download=1"
-    elif (ord(rgi_no[0]) >= 68) and (ord(rgi_no[0]) < 74): # from D thru I
-        gif_zip_fp = f"https://zenodo.org/records/17054526/files/{rgi_no}.zip?download=1"
-    elif (ord(rgi_no[0]) >= 74) and (ord(rgi_no[0]) < 79): # from J thru N
-        gif_zip_fp = f"https://zenodo.org/records/17054660/files/{rgi_no}.zip?download=1"
-    elif (ord(rgi_no[0]) >= 79) and (ord(rgi_no[0]) < 84): # from O thru S
-        gif_zip_fp = f"https://zenodo.org/records/17054835/files/{rgi_no}.zip?download=1"
+        gif_zip_fp = f"https://zenodo.org/records/17096302/files/{rgi_no}_{rgi_id}.zip?download=1"
+    elif (ord(rgi_no[0]) >= 68) and (ord(rgi_no[0]) < 72): # from D thru G
+        gif_zip_fp = f"https://zenodo.org/records/17096311/files/{rgi_no}_{rgi_id}.zip?download=1"
+    elif (ord(rgi_no[0]) >= 72) and (ord(rgi_no[0]) < 77): # from H thru L
+        gif_zip_fp = f"https://zenodo.org/records/17096339/files/{rgi_no}_{rgi_id}.zip?download=1"
+    elif (ord(rgi_no[0]) >= 77) and (ord(rgi_no[0]) < 83): # from M thru R
+        gif_zip_fp = f"https://zenodo.org/records/17096340/files/{rgi_no}_{rgi_id}.zip?download=1"
+    elif (ord(rgi_no[0]) >= 83) and (ord(rgi_no[0]) < 84): # from S
+        gif_zip_fp = f"https://zenodo.org/records/17096370/files/{rgi_no}_{rgi_id}.zip?download=1"
     elif (ord(rgi_no[0]) >= 84) and (ord(rgi_no[0]) < 91): # from T thru Z
-        gif_zip_fp = f"https://zenodo.org/records/17054907/files/{rgi_no}.zip?download=1"
+        gif_zip_fp = f"https://zenodo.org/records/17096411/files/{rgi_no}_{rgi_id}.zip?download=1"
     
     with st.spinner("Downloading animation..."):
         zip_bytes = download_gif_zip(gif_zip_fp)
