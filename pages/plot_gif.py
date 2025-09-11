@@ -32,7 +32,7 @@ gdf = st.session_state.get("gdf", None)
 query_params = st.query_params
 rgi_no_map = query_params.get("name", None)
 rgi_id_map = query_params.get("rgi_id", None)
-rgi_no_man = None
+rgi_no_man, rgi_id_man = None, None
 
 # Allow manual input
 manual_input = st.text_input("Enter a glacier name")
