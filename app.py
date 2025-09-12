@@ -156,7 +156,7 @@ css_element = branca.element.Element(custom_css)
 if glacier is not None:
     center = [glacier["cenlat"], glacier["cenlon"]]
     m = folium.Map(location=center, zoom_start=10, tiles="CartoDB positron", name="Basemap")
-    m.get_root().add_child(css_element)
+    m.get_root().html.add_child(css_element)
     folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         attr="Esri",
