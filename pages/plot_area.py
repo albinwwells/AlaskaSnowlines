@@ -95,7 +95,7 @@ def fetch_snowline_data(rgi_no: str):
     except:
         st.error(f"No data found for gacier {rgi_no}.")
         sys.exit()
-    zip_url = f"https://zenodo.org/records/17060005/files/{zip_name}?download=1"
+    zip_url = f"https://zenodo.org/records/17108203/files/{zip_name}?download=1"
     
     # Download the outer zip
     response = requests.get(zip_url)
@@ -136,7 +136,7 @@ def download_data(rgi_no: str):
         sys.exit()
 
     # Download the outer ZIP
-    zip_url = f"https://zenodo.org/records/17060005/files/{zip_name}?download=1"
+    zip_url = f"https://zenodo.org/records/17108203/files/{zip_name}?download=1"
     response = requests.get(zip_url)
     response.raise_for_status()
 
