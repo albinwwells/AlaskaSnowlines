@@ -126,8 +126,7 @@ elif coord_input:
 else:
     glacier = None
         
-# ---------------- Static map centered on glacier ----------------
-# Define the custom CSS
+# Define custom CSS for popup box
 custom_css = """
 <style>
 /* Remove default popup border, shadow, and tip */
@@ -148,11 +147,9 @@ custom_css = """
 }
 </style>
 """
-
-# Create a custom element and add it to the map
 css_element = branca.element.Element(custom_css)
 
-
+# ---------------- Static map centered on glacier ----------------
 if glacier is not None:
     center = [glacier["cenlat"], glacier["cenlon"]]
     m = folium.Map(location=center, zoom_start=10, tiles="CartoDB positron", name="Basemap")
@@ -178,7 +175,7 @@ if glacier is not None:
     popup_html = f"""
     <div style="
         background-color:#bebebe;  /* light steelblue background */
-        border:1px solid #2a4e6c;  /* thinner border */
+        border:2px solid #2a4e6c;  /* thinner border */
         border-radius:6px;
         padding:8px;
     ">
@@ -203,7 +200,7 @@ if glacier is not None:
         margin-top:5px;
         padding:4px 8px;
         background:#2a4e6c;
-        color:white;
+        color:#bebebe;
         text-decoration:none;
         border-radius:4px;">
         Plot data (area bins)
@@ -214,7 +211,7 @@ if glacier is not None:
         margin-top:5px;
         padding:4px 8px;
         background:#2a4e6c;
-        color:white;
+        color:#d3d3d3;
         text-decoration:none;
         border-radius:4px;">
         Animate data
