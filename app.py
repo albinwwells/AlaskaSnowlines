@@ -149,10 +149,10 @@ if glacier is not None:
 
     popup_html = f"""
     <div style="
-    background-color:#bebebe;  /* light steelblue background */
-    border:1px solid #2a4e6c;  /* thinner border */
-    border-radius:6px;
-    padding:8px;
+    background-color:#bebebe !important;  /* light steelblue background */
+    border:1px solid #2a4e6c !important;  /* thinner border */
+    border-radius:6px !important;
+    padding:8px !important;
     ">
     <b>RGI ID:</b> {glacier['rgi_id']}<br>
     <b>Name:</b> {glacier['glac_name']}<br>
@@ -192,7 +192,7 @@ if glacier is not None:
         Animate data
     </a>
     """
-    popup = folium.Popup(popup_html, max_width=500, class_name="custom-popup")
+    popup = folium.Popup(popup_html, max_width=500)
 
     folium.Marker(
         location=center,
