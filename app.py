@@ -126,6 +126,27 @@ else:
     glacier = None
         
 # ---------------- Static map centered on glacier ----------------
+# Define the custom CSS
+custom_css = """
+<style>
+    /* Target the container that holds the popup content */
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+        border: none !important;
+        outline: none !important;
+    }
+    
+    /* Target the interactive layer that gets focused on click */
+    .leaflet-interactive:focus {
+        outline: none !important;
+    }
+</style>
+"""
+
+# Create a custom element to inject the CSS
+css_element = branca.element.Element(custom_css)
+m.get_root().add_child(css_element)
+
+
 if glacier is not None:
     center = [glacier["cenlat"], glacier["cenlon"]]
     m = folium.Map(location=center, zoom_start=10, tiles="CartoDB positron", name="Basemap")
@@ -149,10 +170,10 @@ if glacier is not None:
 
     popup_html = f"""
     <div style="
-        background-color:#bebebe !important;  /* light steelblue background */
-        border:1px solid #2a4e6c !important;  /* thinner border */
-        border-radius:6px !important;
-        padding:8px !important;
+        background-color:#bebebe;  /* light steelblue background */
+        border:1px solid #2a4e6c;  /* thinner border */
+        border-radius:6px;
+        padding:8px;
     ">
     <b>RGI ID:</b> {glacier['rgi_id']}<br>
     <b>Name:</b> {glacier['glac_name']}<br>
@@ -205,20 +226,6 @@ if glacier is not None:
     st_folium(m, width=1000, height=700)
 else:
     st.error("No matching glacier found.")
-
-# Inject CSS to remove the default popup white background and shadow
-m.get_root().html.add_child(folium.Element("""
-<style>
-.leaflet-popup-content-wrapper {
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-}
-.leaflet-popup-tip {
-    background: #2a4e6c !important;  /* optional: matches marker color */
-}
-</style>
-"""))
 
 st.markdown(
     """
