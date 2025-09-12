@@ -197,7 +197,17 @@ if glacier is not None:
 else:
     st.error("No matching glacier found.")
 
-
+st.markdown(
+    """
+    ---
+    <div style='text-align: center; font-size: 12px; color: gray;'>
+    Data courtesy of: Albin Wells, David Rounce, and Mark Fahnestock<br>
+    Citation: Wells, A., Rounce, D., and Fahnestock, M. <i>Imaging seasonal progression of melt and snowline change 
+    across Alaska using SAR reveals impacts of heat waves</i>. <i>Manuscript in prep.</i> (2025). 
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 # ----- old code: too slow / too expensive -----
 # import streamlit as st
 # import pandas as pd
