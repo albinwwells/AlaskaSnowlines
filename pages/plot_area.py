@@ -260,3 +260,17 @@ else:
             file_name=f"{rgi_no}.zip",
             mime="application/zip"
         )
+
+st.markdown(
+    """
+    ---
+    <div style='text-align: center; font-size: 16px; color: gray;'>
+    Data courtesy of Albin Wells, David Rounce, and Mark Fahnestock<br>
+    Citation: Wells, A., Rounce, D., and Fahnestock, M. <i>Imaging seasonal progression of melt and snowline change 
+    across Alaska using SAR reveals impacts of heat waves</i>. <i>Manuscript in prep.</i> (2025).<br>
+    Correspondence: awwells@cmu.edu
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
