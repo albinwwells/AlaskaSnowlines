@@ -26,7 +26,7 @@ nav()
 # ---------------- Navigation links ----------------
 st.markdown(
     """
-    <div style="margin-bottom:15px; text-align: center; font-size: 16px;">
+    <div style="margin-bottom:15px; text-align: center; font-size: 18px;">
         <a href="https://alaskasnowlines.streamlit.app/plot_elev" target="_blank" style="
             display:inline-block;
             margin-right:5px;
