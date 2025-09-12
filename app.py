@@ -15,8 +15,8 @@ st.set_page_config(
 def nav():
     with st.sidebar:
         st.title("Navigation")
-        st.page_link("https://alaskasnowlines.streamlit.app/", label="Home - glacier selection")
-        st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="Heatmap - elevation bins")
+        st.page_link("https://alaskasnowlines.streamlit.app/", label="Home — glacier selection")
+        st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="Heatmap – elevation bins")
         st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="Heatmap - area bins")
         st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="Glacier animations")
 nav()
@@ -24,7 +24,7 @@ nav()
 # ---------------- Navigation links ----------------
 st.markdown(
     """
-    <div style="margin-bottom:15px;">
+    <div style="margin-bottom:15px; text-align: center; font-size: 12px;">
         <a href="https://alaskasnowlines.streamlit.app/plot_elev" target="_blank" style="
             display:inline-block;
             margin-right:5px;
@@ -59,7 +59,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.write("## Alaska Snowlines – Glacier Finder")
+st.write("## Visualizing Alaska Snowlines and Melt Extents – Glacier Finder")
 
 # ---------------- Load glacier dataset ----------------
 csv_path = os.path.join("data", "RGI2000-v7.0-G-01_alaska_2km2.csv")
