@@ -1,9 +1,10 @@
 import streamlit as st
+import requests, zipfile, io, os
 import pandas as pd
 import geopandas as gpd
 from shapely.geometry import Point
 import folium
-import requests, zipfile, io, os
+from folium.plugins import BeautifyIcon
 from streamlit_folium import st_folium
 
 st.set_page_config(
@@ -190,7 +191,8 @@ if glacier is not None:
     folium.Marker(
         location=center,
         popup=popup,
-        icon=folium.Icon(color=#2a4e6c, prefix='fa', icon="snowflake")
+        icon=BeautifyIcon(icon="snowflake", icon_shape="marker", background_color="#2a4e6c", text_color="white")
+        # icon=folium.Icon(color=#2a4e6c, prefix='fa', icon="snowflake")
     ).add_to(m)
 
     st_folium(m, width=1000, height=700)
