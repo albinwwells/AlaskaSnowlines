@@ -156,7 +156,7 @@ if glacier is not None:
         display:inline-block;
         margin-top:5px;
         padding:4px 8px;
-        background:#007BFF;
+        background:#2a4e6c;
         color:white;
         text-decoration:none;
         border-radius:4px;">
@@ -167,7 +167,7 @@ if glacier is not None:
         display:inline-block;
         margin-top:5px;
         padding:4px 8px;
-        background:#007BFF;
+        background:#2a4e6c;
         color:white;
         text-decoration:none;
         border-radius:4px;">
@@ -178,7 +178,7 @@ if glacier is not None:
         display:inline-block;
         margin-top:5px;
         padding:4px 8px;
-        background:#007BFF;
+        background:#2a4e6c;
         color:white;
         text-decoration:none;
         border-radius:4px;">
@@ -190,7 +190,7 @@ if glacier is not None:
     folium.Marker(
         location=center,
         popup=popup,
-        icon=folium.Icon(color="blue", prefix='fa', icon="snowflake")
+        icon=folium.Icon(color=#2a4e6c, prefix='fa', icon="snowflake")
     ).add_to(m)
 
     st_folium(m, width=1000, height=700)
