@@ -39,7 +39,7 @@ st.markdown(
             display:inline-block;
             margin-right:5px;
             padding:6px 12px;
-            background:#23415a;
+            background:#315b7e;
             color:white;
             text-decoration:none;
             border-radius:4px;">
@@ -48,7 +48,7 @@ st.markdown(
         <a href="https://alaskasnowlines.streamlit.app/plot_gif" target="_blank" style="
             display:inline-block;
             padding:6px 12px;
-            background:#1c3448;
+            background:#2a4e6c;
             color:white;
             text-decoration:none;
             border-radius:4px;">
