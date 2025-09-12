@@ -3,6 +3,7 @@ import requests, zipfile, io, os
 import pandas as pd
 import geopandas as gpd
 from shapely.geometry import Point
+import branca
 import folium
 from folium.plugins import BeautifyIcon
 from streamlit_folium import st_folium
