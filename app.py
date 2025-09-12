@@ -61,7 +61,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.write("## Visualizing Alaska Snowlines and Melt Extents – Glacier Finder")
+st.write("## Visualizing Alaska Snowlines and Melt Extents")
 
 # ---------------- Load glacier dataset ----------------
 csv_path = os.path.join("data", "RGI2000-v7.0-G-01_alaska_2km2.csv")
