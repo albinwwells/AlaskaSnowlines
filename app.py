@@ -175,7 +175,7 @@ if glacier is not None:
     popup_html = f"""
     <div style="
         background-color:#bebebe;  /* light steelblue background */
-        border:2px solid #2a4e6c;  /* thinner border */
+        border:4px solid #2a4e6c;  /* thinner border */
         border-radius:6px;
         padding:8px;
     ">
@@ -189,7 +189,7 @@ if glacier is not None:
         margin-top:5px;
         padding:4px 8px;
         background:#2a4e6c;
-        color:white;
+        color:#e5e5e5;
         text-decoration:none;
         border-radius:4px;">
         Plot data (elevation bins)
@@ -200,7 +200,7 @@ if glacier is not None:
         margin-top:5px;
         padding:4px 8px;
         background:#2a4e6c;
-        color:#bebebe;
+        color:#dcdcdc;
         text-decoration:none;
         border-radius:4px;">
         Plot data (area bins)
