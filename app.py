@@ -192,7 +192,7 @@ if glacier is not None:
         Animate data
     </a>
     """
-    popup = folium.Popup(popup_html, max_width=500, parse_html=True)
+    popup = folium.Popup(popup_html, max_width=500)
 
     folium.Marker(
         location=center,
