@@ -29,7 +29,7 @@ st.markdown(
             display:inline-block;
             margin-right:5px;
             padding:6px 12px;
-            background:#315b7e;
+            background:#2a4e6c;
             color:white;
             text-decoration:none;
             border-radius:4px;">
@@ -39,7 +39,7 @@ st.markdown(
             display:inline-block;
             margin-right:5px;
             padding:6px 12px;
-            background:#315b7e;
+            background:#2a4e6c;
             color:white;
             text-decoration:none;
             border-radius:4px;">
