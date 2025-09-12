@@ -130,20 +130,26 @@ else:
 # Define the custom CSS
 custom_css = """
 <style>
-    /* Target the container that holds the popup content */
-    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-        border: none !important;
-        outline: none !important;
-    }
-    
-    /* Target the interactive layer that gets focused on click */
-    .leaflet-interactive:focus {
-        outline: none !important;
-    }
+/* Remove default popup border, shadow, and tip */
+.leaflet-popup-content-wrapper {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+.leaflet-popup-tip {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Remove focus outline on interactive elements */
+.leaflet-interactive:focus {
+    outline: none !important;
+}
 </style>
 """
 
-# Create a custom element to inject the CSS
+# Create a custom element and add it to the map
 css_element = branca.element.Element(custom_css)
 
 
