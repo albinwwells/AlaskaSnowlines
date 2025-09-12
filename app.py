@@ -200,7 +200,7 @@ if glacier is not None:
         margin-top:5px;
         padding:4px 8px;
         background:#2a4e6c;
-        color:#dcdcdc;
+        color:#fbfbfb;
         text-decoration:none;
         border-radius:4px;">
         Plot data (area bins)
@@ -211,7 +211,7 @@ if glacier is not None:
         margin-top:5px;
         padding:4px 8px;
         background:#2a4e6c;
-        color:#d3d3d3;
+        color:#fbfbfb;
         text-decoration:none;
         border-radius:4px;">
         Animate data
