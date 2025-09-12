@@ -192,7 +192,7 @@ if glacier is not None:
         Animate data
     </a>
     """
-    popup = folium.Popup(popup_html, max_width=500)
+    popup = folium.Popup(popup_html, max_width=500, parse_html=True)
 
     folium.Marker(
         location=center,
@@ -205,20 +205,6 @@ if glacier is not None:
     st_folium(m, width=1000, height=700)
 else:
     st.error("No matching glacier found.")
-
-# Inject custom CSS into the map to remove default popup background
-m.get_root().html.add_child(folium.Element("""
-<style>
-.leaflet-popup.custom-popup .leaflet-popup-content-wrapper {
-    background: transparent;  /* remove default white background */
-    box-shadow: none;          /* remove shadow */
-    padding: 0;                /* remove default padding */
-}
-.leaflet-popup.custom-popup .leaflet-popup-tip {
-    background: #2a4e6c;       /* optional: tip color to match marker */
-}
-</style>
-"""))
 
 st.markdown(
     """
