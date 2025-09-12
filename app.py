@@ -193,7 +193,7 @@ if glacier is not None:
         popup=popup,
         # icon=BeautifyIcon(prefix='fa', icon="snowflake", icon_shape="marker", background_color="#2a4e6c", border_color="#2a4e6c", 
         # text_color="white", icon_size=[30, 30], icon_anchor=[15, 15], border_width=0)
-        icon=folium.Icon(color=#2a4e6c, prefix='fa', icon="snowflake")
+        icon=folium.Icon(color='blue', prefix='fa', icon="snowflake")
     ).add_to(m)
 
     st_folium(m, width=1000, height=700)
