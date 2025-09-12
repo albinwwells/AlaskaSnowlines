@@ -191,7 +191,8 @@ if glacier is not None:
     folium.Marker(
         location=center,
         popup=popup,
-        icon=BeautifyIcon(prefix='fa', icon="snowflake", icon_shape="marker", background_color="#2a4e6c", border_color="#2a4e6c", text_color="white")
+        icon=BeautifyIcon(prefix='fa', icon="snowflake", icon_shape="marker", background_color="#2a4e6c", border_color="#2a4e6c", 
+        text_color="white", icon_size=[30, 30], icon_anchor=[15, 15], border_width=0)
         # icon=folium.Icon(color=#2a4e6c, prefix='fa', icon="snowflake")
     ).add_to(m)
 
