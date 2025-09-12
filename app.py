@@ -145,6 +145,11 @@ custom_css = """
 .leaflet-interactive:focus {
     outline: none !important;
 }
+
+/* Remove close button */
+.leaflet-popup-close-button {
+    display: none !important;
+}
 </style>
 """
 css_element = branca.element.Element(custom_css)
@@ -189,7 +194,7 @@ if glacier is not None:
         margin-top:5px;
         padding:4px 8px;
         background:#2a4e6c;
-        color:#e5e5e5;
+        color:#fbfbfb;
         text-decoration:none;
         border-radius:4px;">
         Plot data (elevation bins)
