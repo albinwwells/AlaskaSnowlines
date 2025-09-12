@@ -49,21 +49,6 @@ if manual_input is not None:
         gdf = load_glaciers(csv_path)
         gdf = gdf[gdf["area_km2"] > 2].copy()
         gdf = gdf[~gdf["glac_name"].str.contains("_abl", case=False, na=False)].copy()
-
-    # Case-insensitive substring match on rgi_id or glac_name
-    matches = gdf[gdf["glac_name"].str.contains(manual_input, case=False, na=False)]
-
-    if not matches.empty and len(matches) < 100:
-        if len(matches) == 1:
-            st.info(f"Found {len(matches)} possible match.")
-        else:
-            st.info(f"Found {len(matches)} possible matches. Please choose one:")
-        selected = st.selectbox("Select glacier:", matches["glac_name"])
-        rgi_no_man = selected.replace(" Glacier", "").replace("_abl", "").strip()
-        rgi_no_man = rgi_no_man.replace("/", "-")
-    else:
-        if matches.empty:
-            st.error("No matching glacier found.")
             
     # Case-insensitive substring match on rgi_id or glac_name
     matches = gdf[
