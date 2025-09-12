@@ -148,6 +148,12 @@ if glacier is not None:
         plot_url3 = f"https://alaskasnowlines.streamlit.app/plot_gif"
 
     popup_html = f"""
+    <div style="
+    background-color:#bebebe;  /* light steelblue background */
+    border:1px solid #2a4e6c;  /* thinner border */
+    border-radius:6px;
+    padding:8px;
+    ">
     <b>RGI ID:</b> {glacier['rgi_id']}<br>
     <b>Name:</b> {glacier['glac_name']}<br>
     <b>Area:</b> {round(glacier['area_km2'], 1)} km2<br>
