@@ -35,7 +35,7 @@ rgi_id_map = query_params.get("rgi_id", None)
 rgi_no_man, rgi_id_man = None, None
 
 # Allow manual input
-manual_input = st.text_input("Enter a glacier name")
+manual_input = st.text_input("Enter a glacier name (e.g., Kennicott):")
 
 if manual_input is not None:
     if gdf is None:  
