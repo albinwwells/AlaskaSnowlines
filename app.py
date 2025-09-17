@@ -186,7 +186,7 @@ if glacier is not None:
     ">
     <b>RGI ID:</b> {glacier['rgi_id']}<br>
     <b>Name:</b> {glacier['glac_name']}<br>
-    <b>Area:</b> {round(glacier['area_km2'], 1)} km2<br>
+    <b>Area:</b> {round(glacier['area_km2'], 1)} km<sup>2</sup><br>
     <b>Min elev:</b> {round(glacier['zmin_m'])} m<br>
     <b>Max elev:</b> {round(glacier['zmax_m'])} m<br>
     <a href="{plot_url1}" target="_blank" style="
