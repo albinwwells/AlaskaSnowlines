@@ -2,7 +2,7 @@ name: Automated Push
 
 on:
   schedule:
-    - cron: "0 */12 * * *"  # Every 12 hours (00:00 and 12:00 UTC)
+    - cron: "0 */6 * * *"  # Every 12 hours (00:00 and 12:00 UTC)
   workflow_dispatch:         # Allow manual trigger from Actions tab
 
 permissions:
