@@ -250,12 +250,14 @@ def fetch_regional_zip():
 
 reg_zip = fetch_regional_zip()
 
+st.markdown("---<div style='text-align: center;'>", unsafe_allow_html=True)
 st.download_button(
     label="Download regional files (e.g., glacier melt days, subregion snowline fraction)",
     data=reg_zip,
     file_name="regional_me_sl.zip",
     mime="application/zip"
 )
+st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown(
     """
