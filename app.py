@@ -242,9 +242,10 @@ def fetch_regional_zip():
     url = "https://raw.githubusercontent.com/albinwwells/AlaskaSnowlines/main/data/regional_me_sl.zip"
     response = requests.get(url)
     if response.status_code == 200:
-        return response.content
+        # Ensure bytes
+        return bytes(response.content)
     else:
-        st.error(f"Failed to download file (status code {response.status_code})")
+        st.error(f"Failed to fetch file (HTTP {response.status_code})")
         return None
 
 reg_zip = fetch_regional_zip()
