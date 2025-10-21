@@ -236,6 +236,26 @@ if glacier is not None:
 else:
     st.error("No matching glacier found.")
 
+# download button
+@st.cache_data
+def fetch_regional_zip():
+    url = "https://raw.githubusercontent.com/albinwwells/AlaskaSnowlines/main/data/regional_me_sl.zip"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.content
+    else:
+        st.error(f"Failed to download file (status code {response.status_code})")
+        return None
+
+reg_zip = fetch_regional_zip()
+
+st.download_button(
+    label="Download regional files (e.g., glacier melt days, subregion snowline fraction)",
+    data=reg_zip,
+    file_name="regional_me_sl.zip",
+    mime="application/zip"
+)
+
 st.markdown(
     """
     ---
