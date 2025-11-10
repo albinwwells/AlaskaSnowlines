@@ -136,7 +136,7 @@ def download_data(rgi_no: str):
         sys.exit()
 
     # Download the outer ZIP
-    zip_url = f"https://zenodo.org/records/17155589/files/{zip_name}?download=1"
+    zip_url = f"https://zenodo.org/records/17573252/files/{zip_name}?download=1"
     response = requests.get(zip_url)
     response.raise_for_status()
 
