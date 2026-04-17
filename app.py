@@ -270,7 +270,7 @@ st.markdown(
     <div style='text-align: center; font-size: 16px; color: gray;'>
     Data courtesy of Albin Wells, David Rounce, and Mark Fahnestock<br>
     Citation: Wells, A., Rounce, D., and Fahnestock, M. Seasonal progression of melt and snowlines 
-    in Alaska from SAR reveals impacts of warming. <i>npj Climate and Atmospheric Science</i><b>9</b>, 
+    in Alaska from SAR reveals impacts of warming. <i>npj Climate and Atmospheric Science</i> <b>9</b>, 
     95 (2026). https://doi.org/10.1038/s41612-026-01321-y<br>
     Correspondence: albin.wells@geo.uzh.ch
     </div>
