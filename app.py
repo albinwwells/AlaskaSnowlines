@@ -21,6 +21,7 @@ def nav():
         st.page_link("https://alaskasnowlines.streamlit.app/plot_elev", label="Heatmap – elevation bins")
         st.page_link("https://alaskasnowlines.streamlit.app/plot_area", label="Heatmap - area bins")
         st.page_link("https://alaskasnowlines.streamlit.app/plot_gif", label="Glacier animations")
+        st.page_link("https://doi.org/10.1038/s41612-026-01321-y", label="Publication")
 nav()
 
 # ---------------- Navigation links ----------------
